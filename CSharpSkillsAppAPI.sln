@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpSkillsAppAPI", "CSharpSkillsAppAPI\CSharpSkillsAppAPI.csproj", "{021B2057-594D-4181-A742-385FC96C59F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBContextSkillsDB", "DBContextSkillsDB\DBContextSkillsDB.csproj", "{5F8EB6B8-53F7-410D-9DAE-FB97BB81792F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{021B2057-594D-4181-A742-385FC96C59F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{021B2057-594D-4181-A742-385FC96C59F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{021B2057-594D-4181-A742-385FC96C59F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{021B2057-594D-4181-A742-385FC96C59F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F8EB6B8-53F7-410D-9DAE-FB97BB81792F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F8EB6B8-53F7-410D-9DAE-FB97BB81792F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F8EB6B8-53F7-410D-9DAE-FB97BB81792F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F8EB6B8-53F7-410D-9DAE-FB97BB81792F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3BAFB374-0DDB-4719-B881-03334A502420}
+	EndGlobalSection
+EndGlobal
