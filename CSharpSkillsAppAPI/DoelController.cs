@@ -14,7 +14,7 @@ namespace CSharpSkillsAppAPI
 
         public DoelController(SkillDBContext db) { 
             _db = db;
-            }
+        }
         
         
         // GET: api/<DoelController>
@@ -30,11 +30,21 @@ namespace CSharpSkillsAppAPI
             _db.SaveChanges();
             return new string[] { "DIT GA IK ZIEN", "value2" };
         }
-                [HttpGet("tweede")]
+
+        [HttpGet("tweede")]
         public IEnumerable<Doel> GetTweede()
         {
             return _db.doelen;
         }
+        [HttpGet("derde/{input}")]
+        public IEnumerable<Doel> GetDerde(string input)
+        {
+            Doel doel= new Doel(input, 2);
+            _db.doelen.Add(doel);
+            _db.SaveChanges();
+            return _db.doelen;
+        }
+
         // GET api/<DoelController>/5
         [HttpGet("{id}")]
         public string Get(int id)
