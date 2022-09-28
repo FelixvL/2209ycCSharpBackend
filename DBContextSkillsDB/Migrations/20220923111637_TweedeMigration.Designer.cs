@@ -3,6 +3,7 @@ using DBContextSkillsDB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBContextSkillsDB.Migrations
 {
     [DbContext(typeof(SkillDBContext))]
-    partial class SkillDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220923111637_TweedeMigration")]
+    partial class TweedeMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
