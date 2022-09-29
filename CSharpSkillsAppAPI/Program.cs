@@ -13,6 +13,16 @@ builder.Services.AddDbContext<SkillDBContext>( options => {
         options.UseSqlServer( builder.Configuration.GetConnectionString("Default"));
 });
 
+var allowOrigins = "_allowOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: allowOrigins,
+        builder =>
+        {
+            builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,6 +33,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(allowOrigins);
 
 app.UseAuthorization();
 

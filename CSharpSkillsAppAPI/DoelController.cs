@@ -19,8 +19,6 @@ namespace CSharpSkillsAppAPI
         
         // GET: api/<DoelController>
 
-
-
         [HttpGet]
         public IEnumerable<string> Get()
         {
