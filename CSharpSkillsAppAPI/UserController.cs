@@ -1,5 +1,6 @@
 ﻿using DBContextSkillsDB;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -49,13 +50,25 @@ namespace CSharpSkillsAppAPI
         
         // GET: api/<UserController>
         [HttpGet("addUser/{input}")]
-        public IEnumerable<User> GetAddUserWithInput(string input)
+        public bool GetAddUserWithInput(string input)
         {
-            User user = new User(input, input, $"{input}@Hotmail.com", "Password", false);
-            _db.users.Add(user);
+            foreach (User user in _db.users)
+            {
+                if (user.UserNaam == input)
+                {
+                    Console.WriteLine("That username already exists");
+                    return false;
+                //} else if (user.Email == emailInput) {
+                    //Console.WriteLine("That Email is already in use");
+                    //return false;
+                }
+            }
+            User potentialUser = new User(input, input, $"{input}@Hotmail.com", "Password", false);
+            _db.users.Add(potentialUser);
             _db.SaveChanges();
-            return _db.users;
+            return true;
         }
+
         [HttpGet("addDoelToUser/{user}/{doelID}")]
         public void AddGoalToUser(User user, int doelID)
         {
@@ -84,6 +97,14 @@ namespace CSharpSkillsAppAPI
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            foreach(User user in _db.users)
+            {
+                if (user.Id == id)
+                {
+                    _db.users.Remove(user);
+                }
+            }
+            _db.SaveChanges();
         }
     }
 }
