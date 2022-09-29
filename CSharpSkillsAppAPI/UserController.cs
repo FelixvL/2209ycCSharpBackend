@@ -27,16 +27,6 @@ namespace CSharpSkillsAppAPI
             return _db.users;
         }
 
-        // GET: api/<UserController>
-        [HttpGet("addUser")]
-        public IEnumerable<User> GetAddUser()
-        {
-            User user = new User();
-            _db.users.Add(user);
-            _db.SaveChanges();
-            return _db.users;
-        }
-
         // POST api/<UserController>
         [HttpPost]
         public void Post([FromBody] string value)
