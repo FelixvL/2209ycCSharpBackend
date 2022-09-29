@@ -41,6 +41,19 @@ namespace DBContextSkillsDB.Migrations
                     b.ToTable("doelen");
                 });
 
+            modelBuilder.Entity("DBContextSkillsDB.SubGoal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("subgoal");
+                });
+
             modelBuilder.Entity("DBContextSkillsDB.User", b =>
                 {
                     b.Property<int>("Id")
@@ -80,6 +93,36 @@ namespace DBContextSkillsDB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("users");
+                });
+
+            modelBuilder.Entity("DoelUser", b =>
+                {
+                    b.Property<int>("DoelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DoelId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("DoelUser");
+                });
+
+            modelBuilder.Entity("DoelUser", b =>
+                {
+                    b.HasOne("DBContextSkillsDB.Doel", null)
+                        .WithMany()
+                        .HasForeignKey("DoelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DBContextSkillsDB.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
