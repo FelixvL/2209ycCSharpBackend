@@ -14,7 +14,7 @@ namespace DBContextSkillsDB
         public int Id { get; set; }
         public string Naam { get; set; } = "Default";
         public int Belangrijkheid { get; set; }
-        public ICollection<User> Users { get; set; }
+        public List<User> Users = new List<User>();
 
         public Doel(string naam, int belangrijkheid)
         {

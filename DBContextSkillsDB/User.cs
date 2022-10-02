@@ -6,38 +6,50 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBContextSkillsDB
 {
     public class User
     {
 
-        public int Id { get; set; }
+        [Key]
+        public int Id { set; get; }
+        public string Naam { set; get; }
+        public string UserNaam { set; get; }
+        public string Email { set; get; }
+        public string Password { set; get; }
+        public int Points { set; get; } = 0;
+        public int GoalProgress { set; get; } = 0;
+        public int SubGoalProgress { set; get; } = 0;
+        public bool IsExpert { set; get; }
 
-        public string Naam { get; set; } = "John Doe";
-        public string UserNaam { get; set; } = "JD";
-        public string Email { get; set; } = "JohnDoe@Hotmail.com";
-        public string Password { get; set; } = "Password";
-        public int Points { get; set; }
-        public int GoalProgress { get; set; }
-        public int SubGoalProgress { get; set; }
-        public bool IsExpert { get; set; }
+        public List<Doel> Doelen = new List<Doel>();
 
-        public ICollection<Doel> Doel { get; set; }
- 
 
-        public User(string naam, string usernaam, string email, string password, int points, int goalprogress, int subgoalprogress, bool isexpert)
+        public List<Doel> getDoelen()
+        {
+            return this.Doelen;
+        }
+        public void addDoel(Doel doel)
+        {
+            this.Doelen.Add(doel);
+            Console.WriteLine(Doelen);
+        }
+        public void removeDoel(Doel doel)
+        {
+            this.Doelen.Remove(doel);
+        }
+
+
+        public User(string naam, string usernaam, string email, string password, bool isexpert)
         {
             this.Naam = naam;
             this.UserNaam = usernaam;
             this.Email = email;
             this.Password = password;
-            this.Points = points;
-            this.GoalProgress = goalprogress;
-            this.SubGoalProgress = subgoalprogress;
             this.IsExpert = isexpert;
-
         }
-        public User() {}
+        public User() { }
     }
 }
