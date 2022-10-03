@@ -39,5 +39,10 @@ namespace DBContextSkillsDB
 
         }
         public User() {}
+
+        public int getId()
+        {
+            return Id;
+        }
     }
 }

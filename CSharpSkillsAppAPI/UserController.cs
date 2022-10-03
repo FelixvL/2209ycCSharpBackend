@@ -1,5 +1,6 @@
 ﻿using DBContextSkillsDB;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -35,6 +36,22 @@ namespace CSharpSkillsAppAPI
             _db.users.Add(user);
             _db.SaveChanges();
             return _db.users;
+        }
+
+        // GET: api/<UserController>
+        [HttpPost("getUserDetails")]
+        public User GetUserDetails(int givenid)
+        {
+            if(_db.users.Find(givenid) != null)
+            {
+                return _db.users.Find(givenid);
+            } 
+                else
+            {
+                return null;
+            }
+            
+            //return _db.users;
         }
 
         // POST api/<UserController>
