@@ -1,9 +1,16 @@
 ﻿using DBContextSkillsDB;
 
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+
+using System;
+using System.Net;
+using System.Security.AccessControl;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,35 +27,48 @@ namespace CSharpSkillsAppAPI
             _db = db;
         }
 
-
+        //See all the users in db (for testing purposes)
+        [HttpGet("all")]
+        public List<User> GetUser(int id)
+        {
+           List<User> userList = new List<User>();
+           foreach(User user in _db.users)
+           {
+                userList.Add(user);
+           }
+            return userList;
+        }
 
         [HttpPost("user/login")]
-        public bool POST([FromBody] JsonElement userinput)
+        public IActionResult POST([FromBody] JsonElement userinput)
         {
             foreach (User user in _db.users)
             {
-                if (user.UserNaam == userinput.GetProperty("username").ToString())
-                {
-                    if(user.Password == userinput.GetProperty("password").ToString())
-                    {
-                        Console.WriteLine("Login succesful!");
-                        return true;
-                    } else
-                    {
-                        Console.WriteLine("Wrong password");
-                        return false;
+                if (user.UserNaam == userinput.GetProperty("username").ToString()){
+                    if(user.Password == userinput.GetProperty("password").ToString()){
+                        //If username exists AND password is correct, set cookie and send to the client
+                        var response = HttpContext.Response;
+                        response.Cookies.Append("naam", user.Naam, new CookieOptions() { SameSite = SameSiteMode.Lax});
+
+                        //TODO: Hash username and password, save that in cookie
+
+                        //HttpCookie is accessible from Request.Cookies
+                        return Ok(response.Cookies);
+                    }
+                    else{
+                        return Problem("Password incorrect");
                     }
                 }
             }
-            Console.WriteLine("User not found");
-            return false;
+            return Problem("No user found");
         }
-        
 
-
-
-
-
+        [HttpPost("cookiecheck")]
+        public IActionResult getCookieheader()
+        {
+            System.Diagnostics.Debug.WriteLine("CLIENT REQUEST", HttpContext.Request);
+            return Ok(HttpContext.Request);
+        }
         
         // GET: api/<UserController>
         [HttpGet("addUser/{input}")]
