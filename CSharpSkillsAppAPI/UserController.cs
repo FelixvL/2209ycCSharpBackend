@@ -1,6 +1,7 @@
 ﻿using DBContextSkillsDB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -42,16 +43,41 @@ namespace CSharpSkillsAppAPI
         [HttpPost("getUserDetails")]
         public User GetUserDetails(int givenid)
         {
-            if(_db.users.Find(givenid) != null)
+            //kan hier try catch implementeren
+            //ff vragen hoe dat hier het meest handig kan
+
+            if (_db.users.Find(givenid) != null)
             {
                 return _db.users.Find(givenid);
-            } 
-                else
+            }
+            else
             {
                 return null;
             }
+        }
+
+        // PUT: api/<UserController>
+        [HttpPut("changeUserDetails")]
+        public void ChangeUserDetails(int givenid, String name, String username, 
+            String email/*, String password*/)
+        {
+            _db.users.Find(givenid).setNaam(name);
             
-            //return _db.users;
+            //implement try catch/if else to check if usn is already in use
+            _db.users.Find(givenid).UserNaam = username;
+            
+            //implement try catch/if else to check if email is already in use
+            _db.users.Find(givenid).Email = email;
+
+            //Do we want to be able to change a password from here?
+            //
+            //If yes, implement call to password method declared in user creation
+            //If that doesn't exist, create said function
+            //
+            //If no, disregard
+
+            _db.SaveChanges();
+
         }
 
         // POST api/<UserController>
