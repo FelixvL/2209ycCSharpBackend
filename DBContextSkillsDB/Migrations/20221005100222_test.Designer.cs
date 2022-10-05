@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBContextSkillsDB.Migrations
 {
     [DbContext(typeof(SkillDBContext))]
-    [Migration("20220929193044_test")]
+    [Migration("20221005100222_test")]
     partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,7 +66,7 @@ namespace DBContextSkillsDB.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("GoalProgress")
                         .HasColumnType("int");
@@ -90,9 +90,15 @@ namespace DBContextSkillsDB.Migrations
 
                     b.Property<string>("UserNaam")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("UserNaam")
+                        .IsUnique();
 
                     b.ToTable("users");
                 });

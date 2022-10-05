@@ -6,14 +6,18 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using DBContextSkillsDB;
+
 
 namespace DBContextSkillsDB
 {
+    [Index(nameof(User.UserNaam), IsUnique = true)]
+    [Index(nameof(User.Email), IsUnique = true)]
     public class User
     {
-
+        [Key]
         public int Id { get; set; }
-
         public string Naam { get; set; } = "John Doe";
         public string UserNaam { get; set; } = "JD";
         public string Email { get; set; } = "JohnDoe@Hotmail.com";
@@ -36,13 +40,8 @@ namespace DBContextSkillsDB
             this.GoalProgress = goalprogress;
             this.SubGoalProgress = subgoalprogress;
             this.IsExpert = isexpert;
-
         }
+
         public User() {}
-
-        public int getId()
-        {
-            return Id;
-        }
     }
 }
