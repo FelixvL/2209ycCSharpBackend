@@ -1,5 +1,8 @@
 ﻿using DBContextSkillsDB;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.Data.SqlClient;
 using System.Text.Json;
 
@@ -13,10 +16,14 @@ namespace CSharpSkillsAppAPI
     {
         private SkillDBContext _db;
 
-
         public UserController(SkillDBContext db) { 
             _db = db;
         }
+        
+
+        //---------------------------------------------------------------------------------
+        //REGISTER
+
 
 
 
@@ -49,6 +56,106 @@ namespace CSharpSkillsAppAPI
 
         
         // GET: api/<UserController>
+        [HttpGet("addUser/{input}")]
+        public JsonResult GetAddUserWithInput(string input)
+        {
+            try
+            {
+                User user = new User(input, $"User{input}", $"{input}@Hotmail.com", "Password", 1, 1, 1, false);
+                _db.users.Add(user);
+                _db.SaveChanges();
+                return new JsonResult(user);
+            }
+            catch (DbUpdateException e)
+            {
+                Console.WriteLine(e);
+                return new JsonResult(e);
+                //want to return something different, don't know what
+            }
+        }
+
+        // GET: api/<UserController>
+        [HttpGet("addUser")]
+        public JsonResult GetAddUser()
+        {
+            try 
+            { 
+                User user = new User();
+                _db.users.Add(user);
+                _db.SaveChanges();
+                return new JsonResult(user);
+            }
+            catch (DbUpdateException e)
+            {
+                Console.WriteLine(e);
+                return new JsonResult(e);
+                //want to return something different, don't know what
+            }
+        }
+        //-------------------------------------------------------------------------
+
+
+
+
+
+        //-------------------------------------------------------------------------
+        //USER DETAILS
+
+        // GET: api/<UserController>
+        [HttpPost("getUserDetails")]
+        public JsonResult GetUserDetails(int givenid)
+        {
+            try
+            {
+                JsonResult test = new JsonResult(_db.users.Find(givenid));
+                return test;
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+                return new JsonResult(e);
+                //want to return something different, don't know what
+            }
+        }
+
+        // PUT: api/<UserController>
+        [HttpPut("changeUserDetails")]
+        public JsonResult ChangeUserDetails(int givenid, String name, String username, 
+            String email)
+        {
+            User user;
+            try
+            {
+                user = _db.users.Find(givenid);
+
+                if (user.Naam != name) 
+                {
+                    user.Naam = name;
+                }
+                if (user.UserNaam != username)
+                {
+                    user.UserNaam = username;
+                }
+                if (user.Email != email)
+                {
+                    user.Email = email;
+                }
+
+                _db.SaveChanges();
+                return new JsonResult(_db.users.Find(givenid));
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+                return new JsonResult(e);
+                //want to return something different, don't know what
+            }
+            catch (DbUpdateException e)
+            {
+                Console.WriteLine(e);
+                return new JsonResult(e);
+                //want to return something different, don't know what
+            }
         [HttpGet("addUser/{name}/{username}/{email}/{password}/{dateofbirth}/{street}/{housenumber}/{postalcode}/{city}/{country}/{isexpert}")]
         public bool GetAddUserWithInput(string name, string username, string email, string password, DateTime dateofbirth, string street, int housenumber, string postalcode, string city, string country, bool isexpert)
         {
@@ -94,7 +201,13 @@ namespace CSharpSkillsAppAPI
                 Console.WriteLine(activeUser.Goals);
             }
         }
+        //-------------------------------------------------------------------------
 
+
+
+
+        //-------------------------------------------------------------------------
+        //EXAMPLES?
         // POST api/<UserController>
         [HttpPost]
         public void Post([FromBody] Goal goal)

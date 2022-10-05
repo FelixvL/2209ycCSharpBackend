@@ -14,6 +14,8 @@ namespace DBContextSkillsDB
         [AllowNull]
         public DbSet<Goal> goals { get; set; }
         [AllowNull]
+        public DbSet<SubGoal> subgoal { get; set; }
+        [AllowNull]
         public DbSet<User> users { get; set; }
     }
 }

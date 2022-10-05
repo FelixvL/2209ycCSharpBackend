@@ -42,6 +42,19 @@ namespace DBContextSkillsDB.Migrations
                     b.ToTable("goals");
                 });
 
+            modelBuilder.Entity("DBContextSkillsDB.SubGoal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("subgoal");
+                });
+
             modelBuilder.Entity("DBContextSkillsDB.User", b =>
                 {
                     b.Property<int>("Id")
@@ -63,7 +76,7 @@ namespace DBContextSkillsDB.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("GoalProgress")
                         .HasColumnType("int");
@@ -98,11 +111,47 @@ namespace DBContextSkillsDB.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("UserNaam")
+                        .IsUnique();
+
                     b.ToTable("users");
+                });
+
+            modelBuilder.Entity("DoelUser", b =>
+                {
+                    b.Property<int>("DoelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DoelId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("DoelUser");
+                });
+
+            modelBuilder.Entity("DoelUser", b =>
+                {
+                    b.HasOne("DBContextSkillsDB.Doel", null)
+                        .WithMany()
+                        .HasForeignKey("DoelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DBContextSkillsDB.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

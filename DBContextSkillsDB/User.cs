@@ -8,8 +8,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace DBContextSkillsDB
 {
+    [Index(nameof(User.UserNaam), IsUnique = true)]
+    [Index(nameof(User.Email), IsUnique = true)]
     public class User
     {
 
@@ -62,6 +65,7 @@ namespace DBContextSkillsDB
             this.Country = country;
             this.IsExpert = isexpert;
         }
-        public User() { }
+
+        public User() {}
     }
 }
