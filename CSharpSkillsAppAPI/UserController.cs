@@ -133,7 +133,7 @@ namespace CSharpSkillsAppAPI
         //USER DETAILS
 
         // GET: api/<UserController>
-        [HttpPost("getUserDetails")]
+        /*[HttpPost("getUserDetails")]
         public JsonResult GetUserDetails(int givenid)
         {
             try
@@ -147,7 +147,7 @@ namespace CSharpSkillsAppAPI
                 return new JsonResult(e);
                 //want to return something different, don't know what
             }
-        }
+        }*/
 
         // PUT: api/<UserController>
         [HttpPut("changeUserDetails")]
