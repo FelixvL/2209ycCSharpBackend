@@ -61,7 +61,10 @@ namespace CSharpSkillsAppAPI
         {
             try
             {
-                User user = new User(input, $"User{input}", $"{input}@Hotmail.com", "Password", 1, 1, 1, false);
+                User user = new User(input, $"User{input}", $"{input}@Hotmail.com",
+                    "Password", new DateTime(), "straat", 
+                    17, "2367", "Nieuwegein", 
+                    "Nederland", false) ;
                 _db.users.Add(user);
                 _db.SaveChanges();
                 return new JsonResult(user);
@@ -92,6 +95,21 @@ namespace CSharpSkillsAppAPI
                 //want to return something different, don't know what
             }
         }
+
+        // DELETE api/<UserController>/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            foreach (User user in _db.users)
+            {
+                if (user.Id == id)
+                {
+                    _db.users.Remove(user);
+                }
+            }
+            _db.SaveChanges();
+        }
+
         //-------------------------------------------------------------------------
 
 
@@ -120,7 +138,7 @@ namespace CSharpSkillsAppAPI
 
         // PUT: api/<UserController>
         [HttpPut("changeUserDetails")]
-        public JsonResult ChangeUserDetails(int givenid, String name, String username, 
+        public JsonResult ChangeUserDetails(int givenid, String name, String username,
             String email)
         {
             User user;
@@ -128,13 +146,13 @@ namespace CSharpSkillsAppAPI
             {
                 user = _db.users.Find(givenid);
 
-                if (user.Naam != name) 
+                if (user.Name != name)
                 {
-                    user.Naam = name;
+                    user.Name = name;
                 }
-                if (user.UserNaam != username)
+                if (user.UserName != username)
                 {
-                    user.UserNaam = username;
+                    user.UserName = username;
                 }
                 if (user.Email != email)
                 {
@@ -156,7 +174,10 @@ namespace CSharpSkillsAppAPI
                 return new JsonResult(e);
                 //want to return something different, don't know what
             }
-        [HttpGet("addUser/{name}/{username}/{email}/{password}/{dateofbirth}/{street}/{housenumber}/{postalcode}/{city}/{country}/{isexpert}")]
+        }
+
+
+        [HttpPost("addUser/{name}/{username}/{email}/{password}/{dateofbirth}/{street}/{housenumber}/{postalcode}/{city}/{country}/{isexpert}")]
         public bool GetAddUserWithInput(string name, string username, string email, string password, DateTime dateofbirth, string street, int housenumber, string postalcode, string city, string country, bool isexpert)
         {
             foreach (User user in _db.users)
@@ -175,6 +196,8 @@ namespace CSharpSkillsAppAPI
             _db.SaveChanges();
             return true;
         }
+
+
 
         [HttpGet("addDoelToUser/{activeUser}/{goalID}")]
         public void AddGoalToUser(int userID, int goalID)
@@ -218,20 +241,7 @@ namespace CSharpSkillsAppAPI
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
-        }
 
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-            foreach(User user in _db.users)
-            {
-                if (user.Id == id)
-                {
-                    _db.users.Remove(user);
-                }
-            }
-            _db.SaveChanges();
         }
     }
 }

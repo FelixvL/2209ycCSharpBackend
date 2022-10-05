@@ -11,11 +11,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DBContextSkillsDB
 {
-    [Index(nameof(User.UserNaam), IsUnique = true)]
+    [Index(nameof(User.UserName), IsUnique = true)]
     [Index(nameof(User.Email), IsUnique = true)]
     public class User
     {
-
         [Key]
         public int Id { set; get; }
         public string Name { set; get; }
@@ -51,7 +50,10 @@ namespace DBContextSkillsDB
         }
 
 
-        public User(string name, string username, string email, string password, DateTime dateofbirth, string street, int housenumber, string postalcode, string city, string country, bool isexpert)
+        public User(string name, string username, string email, 
+            string password, DateTime dateofbirth, string street, 
+            int housenumber, string postalcode, string city, 
+            string country, bool isexpert)
         {
             this.Name = name;
             this.UserName = username;

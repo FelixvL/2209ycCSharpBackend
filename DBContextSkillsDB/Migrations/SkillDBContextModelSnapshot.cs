@@ -118,40 +118,10 @@ namespace DBContextSkillsDB.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("UserNaam")
+                    b.HasIndex("UserName")
                         .IsUnique();
 
                     b.ToTable("users");
-                });
-
-            modelBuilder.Entity("DoelUser", b =>
-                {
-                    b.Property<int>("DoelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DoelId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("DoelUser");
-                });
-
-            modelBuilder.Entity("DoelUser", b =>
-                {
-                    b.HasOne("DBContextSkillsDB.Doel", null)
-                        .WithMany()
-                        .HasForeignKey("DoelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DBContextSkillsDB.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

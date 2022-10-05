@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBContextSkillsDB.Migrations
 {
     [DbContext(typeof(SkillDBContext))]
-<<<<<<<< HEAD:DBContextSkillsDB/Migrations/20221003143006_DBMigration.Designer.cs
-    [Migration("20221003143006_DBMigration")]
-    partial class DBMigration
-========
-    [Migration("20221005100222_test")]
+    [Migration("20221005132906_test")]
     partial class test
->>>>>>>> master:DBContextSkillsDB/Migrations/20221005100222_test.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -125,40 +120,10 @@ namespace DBContextSkillsDB.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("UserNaam")
+                    b.HasIndex("UserName")
                         .IsUnique();
 
                     b.ToTable("users");
-                });
-
-            modelBuilder.Entity("DoelUser", b =>
-                {
-                    b.Property<int>("DoelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("DoelId", "UsersId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("DoelUser");
-                });
-
-            modelBuilder.Entity("DoelUser", b =>
-                {
-                    b.HasOne("DBContextSkillsDB.Doel", null)
-                        .WithMany()
-                        .HasForeignKey("DoelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DBContextSkillsDB.User", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
