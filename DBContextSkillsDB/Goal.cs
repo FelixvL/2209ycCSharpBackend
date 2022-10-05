@@ -14,13 +14,13 @@ namespace DBContextSkillsDB
         public int Id { get; set; }
         public string Naam { get; set; } = "Default";
         public int Belangrijkheid { get; set; }
-        public List<User> Users = new List<User>();
+        public ICollection<User> Users { get; set; }
 
         public Doel(string naam, int belangrijkheid)
         {
             this.Naam = naam;
             this.Belangrijkheid = belangrijkheid;
         }
-        public Doel() {}
+        public Doel() { }
     }
 }
