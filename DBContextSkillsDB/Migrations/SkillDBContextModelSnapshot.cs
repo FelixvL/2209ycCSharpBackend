@@ -64,7 +64,7 @@ namespace DBContextSkillsDB.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("GoalProgress")
                         .HasColumnType("int");
@@ -88,9 +88,15 @@ namespace DBContextSkillsDB.Migrations
 
                     b.Property<string>("UserNaam")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("UserNaam")
+                        .IsUnique();
 
                     b.ToTable("users");
                 });

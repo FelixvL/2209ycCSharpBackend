@@ -6,22 +6,26 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
+using DBContextSkillsDB;
+
 
 namespace DBContextSkillsDB
 {
+    [Index(nameof(User.UserNaam), IsUnique = true)]
+    [Index(nameof(User.Email), IsUnique = true)]
     public class User
     {
-
-        private int Id { get; set; }
-
-        private string Naam { get; set; }
-        private string UserNaam { get; set; }
-        private string Email { get; set; }
-        private string Password { get; set; }
-        private int Points { get; set; }
-        private int GoalProgress { get; set; }
-        private int SubGoalProgress { get; set; }
-        private bool IsExpert { get; set; }
+        [Key]
+        public int Id { get; set; }
+        public string Naam { get; set; } = "John Doe";
+        public string UserNaam { get; set; } = "JD";
+        public string Email { get; set; } = "JohnDoe@Hotmail.com";
+        public string Password { get; set; } = "Password";
+        public int Points { get; set; }
+        public int GoalProgress { get; set; }
+        public int SubGoalProgress { get; set; }
+        public bool IsExpert { get; set; }
 
         private List<Doel> doelen = new List<Doel>();
         public List<Doel> getDoelen()
@@ -49,5 +53,7 @@ namespace DBContextSkillsDB
             this.SubGoalProgress = subgoalprogress;
             this.IsExpert = isexpert;
         }
+
+        public User() {}
     }
 }

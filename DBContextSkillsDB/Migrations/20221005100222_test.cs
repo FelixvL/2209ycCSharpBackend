@@ -41,8 +41,8 @@ namespace DBContextSkillsDB.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Naam = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserNaam = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserNaam = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Points = table.Column<int>(type: "int", nullable: false),
                     GoalProgress = table.Column<int>(type: "int", nullable: false),
@@ -82,6 +82,18 @@ namespace DBContextSkillsDB.Migrations
                 name: "IX_DoelUser_UsersId",
                 table: "DoelUser",
                 column: "UsersId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_Email",
+                table: "users",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_UserNaam",
+                table: "users",
+                column: "UserNaam",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
