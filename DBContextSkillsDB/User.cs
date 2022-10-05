@@ -40,7 +40,7 @@ namespace DBContextSkillsDB
         {
             //doelen.Remove();
         }
- 
+
 
         public User(string naam, string usernaam, string email, string password, int points, int goalprogress, int subgoalprogress, bool isexpert)
         {
@@ -54,6 +54,6 @@ namespace DBContextSkillsDB
             this.IsExpert = isexpert;
         }
 
-        public User() {}
+        public User() { }
     }
 }

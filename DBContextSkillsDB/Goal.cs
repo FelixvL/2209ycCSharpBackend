@@ -21,6 +21,6 @@ namespace DBContextSkillsDB
             this.Naam = naam;
             this.Belangrijkheid = belangrijkheid;
         }
-        public Doel() {}
+        public Doel() { }
     }
 }

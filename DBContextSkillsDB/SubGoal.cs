@@ -23,7 +23,7 @@ namespace DBContextSkillsDB
             this.description = description;
         }
 
-        public SubGoal(){}
+        public SubGoal() { }
 
         public void setName(String name)
         {

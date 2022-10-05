@@ -4,7 +4,7 @@
 
 namespace DBContextSkillsDB.Migrations
 {
-    public partial class test : Migration
+    public partial class getalltables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -47,41 +47,23 @@ namespace DBContextSkillsDB.Migrations
                     Points = table.Column<int>(type: "int", nullable: false),
                     GoalProgress = table.Column<int>(type: "int", nullable: false),
                     SubGoalProgress = table.Column<int>(type: "int", nullable: false),
-                    IsExpert = table.Column<bool>(type: "bit", nullable: false)
+                    IsExpert = table.Column<bool>(type: "bit", nullable: false),
+                    DoelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_users", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "DoelUser",
-                columns: table => new
-                {
-                    DoelId = table.Column<int>(type: "int", nullable: false),
-                    UsersId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DoelUser", x => new { x.DoelId, x.UsersId });
                     table.ForeignKey(
-                        name: "FK_DoelUser_doelen_DoelId",
+                        name: "FK_users_doelen_DoelId",
                         column: x => x.DoelId,
                         principalTable: "doelen",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DoelUser_users_UsersId",
-                        column: x => x.UsersId,
-                        principalTable: "users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DoelUser_UsersId",
-                table: "DoelUser",
-                column: "UsersId");
+                name: "IX_users_DoelId",
+                table: "users",
+                column: "DoelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_users_Email",
@@ -99,16 +81,13 @@ namespace DBContextSkillsDB.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DoelUser");
-
-            migrationBuilder.DropTable(
                 name: "subgoal");
 
             migrationBuilder.DropTable(
-                name: "doelen");
+                name: "users");
 
             migrationBuilder.DropTable(
-                name: "users");
+                name: "doelen");
         }
     }
 }
