@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBContextSkillsDB.Migrations
 {
     [DbContext(typeof(SkillDBContext))]
-    [Migration("20220929121954_DBMigration")]
+    [Migration("20221003143006_DBMigration")]
     partial class DBMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace DBContextSkillsDB.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("DBContextSkillsDB.Doel", b =>
+            modelBuilder.Entity("DBContextSkillsDB.Goal", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,16 +32,16 @@ namespace DBContextSkillsDB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("Belangrijkheid")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Naam")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("doelen");
+                    b.ToTable("goals");
                 });
 
             modelBuilder.Entity("DBContextSkillsDB.User", b =>
@@ -52,8 +52,16 @@ namespace DBContextSkillsDB.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("DoelId")
-                        .HasColumnType("int");
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -62,10 +70,13 @@ namespace DBContextSkillsDB.Migrations
                     b.Property<int>("GoalProgress")
                         .HasColumnType("int");
 
+                    b.Property<int>("HouseNumber")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsExpert")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Naam")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -76,30 +87,24 @@ namespace DBContextSkillsDB.Migrations
                     b.Property<int>("Points")
                         .HasColumnType("int");
 
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("SubGoalProgress")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserNaam")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DoelId");
-
                     b.ToTable("users");
-                });
-
-            modelBuilder.Entity("DBContextSkillsDB.User", b =>
-                {
-                    b.HasOne("DBContextSkillsDB.Doel", null)
-                        .WithMany("Users")
-                        .HasForeignKey("DoelId");
-                });
-
-            modelBuilder.Entity("DBContextSkillsDB.Doel", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

@@ -25,7 +25,7 @@ namespace CSharpSkillsAppAPI
         {
             foreach (User user in _db.users)
             {
-                if (user.UserNaam == userinput.GetProperty("username").ToString())
+                if (user.UserName == userinput.GetProperty("username").ToString())
                 {
                     if(user.Password == userinput.GetProperty("password").ToString())
                     {
@@ -49,12 +49,12 @@ namespace CSharpSkillsAppAPI
 
         
         // GET: api/<UserController>
-        [HttpGet("addUser/{input}")]
-        public bool GetAddUserWithInput(string input)
+        [HttpGet("addUser/{name}/{username}/{email}/{password}/{dateofbirth}/{street}/{housenumber}/{postalcode}/{city}/{country}/{isexpert}")]
+        public bool GetAddUserWithInput(string name, string username, string email, string password, DateTime dateofbirth, string street, int housenumber, string postalcode, string city, string country, bool isexpert)
         {
             foreach (User user in _db.users)
             {
-                if (user.UserNaam == input)
+                if (user.UserName == username)
                 {
                     Console.WriteLine("That username already exists");
                     return false;
@@ -63,27 +63,41 @@ namespace CSharpSkillsAppAPI
                     //return false;
                 }
             }
-            User potentialUser = new User(input, input, $"{input}@Hotmail.com", "Password", false);
+            User potentialUser = new User(name, username, email, password, dateofbirth, street, housenumber, postalcode, city, country, false);
             _db.users.Add(potentialUser);
             _db.SaveChanges();
             return true;
         }
 
-        [HttpGet("addDoelToUser/{user}/{doelID}")]
-        public void AddGoalToUser(User user, int doelID)
+        [HttpGet("addDoelToUser/{activeUser}/{goalID}")]
+        public void AddGoalToUser(int userID, int goalID)
         {
-            foreach (Doel goal in _db.doelen)
+            User activeUser = null;
+            Goal goalToAdd = null;
+            foreach (Goal goal in _db.goals)
             {
-                if (goal.Id == doelID)
+               if (goal.Id == goalID)
                 {
-                    user.addDoel(goal);
+                    goalToAdd = goal;
                 }
+            }
+            foreach (User user in _db.users) { 
+                if (user.Id == userID)
+                {
+                    activeUser = user;
+                }
+            }
+            if((activeUser != null) && (goalToAdd != null))
+            {
+                activeUser.addDoel(goalToAdd);
+                _db.SaveChanges();
+                Console.WriteLine(activeUser.Goals);
             }
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Goal goal)
         {
         }
 

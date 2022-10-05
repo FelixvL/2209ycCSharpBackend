@@ -15,39 +15,51 @@ namespace DBContextSkillsDB
 
         [Key]
         public int Id { set; get; }
-        public string Naam { set; get; }
-        public string UserNaam { set; get; }
+        public string Name { set; get; }
+        public string UserName { set; get; }
         public string Email { set; get; }
         public string Password { set; get; }
+        public DateTime DateOfBirth { set; get; }
+        public string Street { set; get; }
+        public int HouseNumber { set; get; }
+        public string PostalCode { set; get; }
+        public string City { set; get; }
+        public string Country { set; get; }
         public int Points { set; get; } = 0;
         public int GoalProgress { set; get; } = 0;
         public int SubGoalProgress { set; get; } = 0;
         public bool IsExpert { set; get; }
 
-        public List<Doel> Doelen = new List<Doel>();
+        public List<Goal> Goals = new List<Goal>();
 
 
-        public List<Doel> getDoelen()
+        public List<Goal> getDoelen()
         {
-            return this.Doelen;
+            return this.Goals;
         }
-        public void addDoel(Doel doel)
+        public void addDoel(Goal goal)
         {
-            this.Doelen.Add(doel);
-            Console.WriteLine(Doelen);
+            this.Goals.Add(goal);
+            Console.WriteLine(Goals);
         }
-        public void removeDoel(Doel doel)
+        public void removeDoel(Goal goal)
         {
-            this.Doelen.Remove(doel);
+            this.Goals.Remove(goal);
         }
 
 
-        public User(string naam, string usernaam, string email, string password, bool isexpert)
+        public User(string name, string username, string email, string password, DateTime dateofbirth, string street, int housenumber, string postalcode, string city, string country, bool isexpert)
         {
-            this.Naam = naam;
-            this.UserNaam = usernaam;
+            this.Name = name;
+            this.UserName = username;
             this.Email = email;
             this.Password = password;
+            this.DateOfBirth = dateofbirth;
+            this.Street = street;
+            this.HouseNumber = housenumber;
+            this.PostalCode = postalcode;
+            this.City = city;
+            this.Country = country;
             this.IsExpert = isexpert;
         }
         public User() { }
