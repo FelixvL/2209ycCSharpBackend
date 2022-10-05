@@ -15,6 +15,9 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,26 +27,10 @@ namespace CSharpSkillsAppAPI
     [ApiController]
     public class UserController : ControllerBase
     {
-        //TODO: Change this string to the azure online frontend domain name when it is ready for deployment
-        string domainName = "localhost";
-
         private SkillDBContext _db;
-
 
         public UserController(SkillDBContext db) { 
             _db = db;
-        }
-
-        //See all the users in db (for testing purposes)
-        [HttpGet("all")]
-        public List<User> GetUser(int id)
-        {
-           List<User> userList = new List<User>();
-           foreach(User user in _db.users)
-           {
-                userList.Add(user);
-           }
-            return userList;
         }
 
         //User login
@@ -59,7 +46,8 @@ namespace CSharpSkillsAppAPI
                     if (user.Password == userinput.GetProperty("password").ToString())
                     {
                         //If username exists AND password is correct, send back json. In client store it in a localStorage
-                        var userInfo = new { 
+                        var userInfo = new
+                        {
                             id = user.Id,
                             username = user.UserNaam,
                             name = user.Naam,
@@ -82,27 +70,6 @@ namespace CSharpSkillsAppAPI
             return json.ToString();
         }
 
-        
-        // GET: api/<UserController>
-        [HttpGet("addUser/{input}")]
-        public bool GetAddUserWithInput(string input)
-        {
-            foreach (User user in _db.users)
-            {
-                if (user.UserNaam == input)
-                {
-                    Console.WriteLine("That username already exists");
-                    return false;
-                //} else if (user.Email == emailInput) {
-                    //Console.WriteLine("That Email is already in use");
-                    //return false;
-                }
-            }
-            User potentialUser = new User(input, input, $"{input}@Hotmail.com", "Password", false);
-            _db.users.Add(potentialUser);
-            _db.SaveChanges();
-            return true;
-        }
 
         [HttpGet("addDoelToUser/{user}/{doelID}")]
         public void AddGoalToUser(User user, int doelID)
@@ -116,6 +83,118 @@ namespace CSharpSkillsAppAPI
             }
         }
 
+        //---------------------------------------------------------------------------------
+        //REGISTER
+
+        // GET: api/<UserController>
+        [HttpGet("addUser/{input}")]
+        public JsonResult GetAddUserWithInput(string input)
+        {
+            try
+            {
+                User user = new User(input, $"User{input}", $"{input}@Hotmail.com", "Password", 1, 1, 1, false);
+                _db.users.Add(user);
+                _db.SaveChanges();
+                return new JsonResult(user);
+            }
+            catch (DbUpdateException e)
+            {
+                Console.WriteLine(e);
+                return new JsonResult(e);
+                //want to return something different, don't know what
+            }
+        }
+
+        // GET: api/<UserController>
+        [HttpGet("addUser")]
+        public JsonResult GetAddUser()
+        {
+            try 
+            { 
+                User user = new User();
+                _db.users.Add(user);
+                _db.SaveChanges();
+                return new JsonResult(user);
+            }
+            catch (DbUpdateException e)
+            {
+                Console.WriteLine(e);
+                return new JsonResult(e);
+                //want to return something different, don't know what
+            }
+        }
+        //-------------------------------------------------------------------------
+
+
+
+
+
+        //-------------------------------------------------------------------------
+        //USER DETAILS
+
+        // GET: api/<UserController>
+        [HttpPost("getUserDetails")]
+        public JsonResult GetUserDetails(int givenid)
+        {
+            try
+            {
+                JsonResult test = new JsonResult(_db.users.Find(givenid));
+                return test;
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+                return new JsonResult(e);
+                //want to return something different, don't know what
+            }
+        }
+
+        // PUT: api/<UserController>
+        [HttpPut("changeUserDetails")]
+        public JsonResult ChangeUserDetails(int givenid, String name, String username, 
+            String email)
+        {
+            User user;
+            try
+            {
+                user = _db.users.Find(givenid);
+
+                if (user.Naam != name) 
+                {
+                    user.Naam = name;
+                }
+                if (user.UserNaam != username)
+                {
+                    user.UserNaam = username;
+                }
+                if (user.Email != email)
+                {
+                    user.Email = email;
+                }
+
+                _db.SaveChanges();
+                return new JsonResult(_db.users.Find(givenid));
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine(e);
+                return new JsonResult(e);
+                //want to return something different, don't know what
+            }
+            catch (DbUpdateException e)
+            {
+                Console.WriteLine(e);
+                return new JsonResult(e);
+                //want to return something different, don't know what
+            }
+        }
+        //-------------------------------------------------------------------------
+
+
+
+
+        //-------------------------------------------------------------------------
+        //EXAMPLES?
         // POST api/<UserController>
         [HttpPost]
         public void Post([FromBody] string value)
@@ -128,11 +207,10 @@ namespace CSharpSkillsAppAPI
         {
         }
 
-        // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            foreach(User user in _db.users)
+            foreach (User user in _db.users)
             {
                 if (user.Id == id)
                 {
@@ -140,13 +218,6 @@ namespace CSharpSkillsAppAPI
                 }
             }
             _db.SaveChanges();
-        }
-
-        [HttpPost("login")]
-        public string loginUser([FromBody] dynamic loginJson)
-        {
-            //For now return appel (to see if its works). Should ofcourse be code
-            return "appel";
         }
     }
 }
