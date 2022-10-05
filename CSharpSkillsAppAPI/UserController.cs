@@ -7,7 +7,11 @@ using Microsoft.Data.SqlClient;
 
 using System;
 using System.Net;
+using System.Net.Http.Json;
+using System.Net.Mime;
+using System.Runtime.InteropServices;
 using System.Security.AccessControl;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -20,6 +24,9 @@ namespace CSharpSkillsAppAPI
     [ApiController]
     public class UserController : ControllerBase
     {
+        //TODO: Change this string to the azure online frontend domain name when it is ready for deployment
+        string domainName = "localhost";
+
         private SkillDBContext _db;
 
 
@@ -39,36 +46,42 @@ namespace CSharpSkillsAppAPI
             return userList;
         }
 
+        //User login
         [HttpPost("user/login")]
-        public IActionResult POST([FromBody] JsonElement userinput)
+        public string POST([FromBody] JsonElement userinput)
         {
+            object message = new { Message = " " };
+
             foreach (User user in _db.users)
             {
-                if (user.UserNaam == userinput.GetProperty("username").ToString()){
-                    if(user.Password == userinput.GetProperty("password").ToString()){
-                        //If username exists AND password is correct, set cookie and send to the client
-                        var response = HttpContext.Response;
-                        response.Cookies.Append("naam", user.Naam, new CookieOptions() { SameSite = SameSiteMode.Lax});
-
-                        //TODO: Hash username and password, save that in cookie
-
-                        //HttpCookie is accessible from Request.Cookies
-                        return Ok(response.Cookies);
+                if (user.UserNaam == userinput.GetProperty("username").ToString())
+                {
+                    if (user.Password == userinput.GetProperty("password").ToString())
+                    {
+                        //If username exists AND password is correct, send back json. In client store it in a localStorage
+                        var userInfo = new { 
+                            id = user.Id,
+                            username = user.UserNaam,
+                            name = user.Naam,
+                            email = user.Email,
+                        };
+                        var jsonInfo = JsonSerializer.Serialize(userInfo);
+                        return jsonInfo.ToString();
                     }
-                    else{
-                        return Problem("Password incorrect");
+                    else
+                    {
+                        message = new { Message = "Wrong password" };
+                        var jsonPass = JsonSerializer.Serialize(message);
+                        return jsonPass.ToString();
                     }
                 }
             }
-            return Problem("No user found");
+
+            message = new { Message = "User does not exist" };
+            var json = JsonSerializer.Serialize(message);
+            return json.ToString();
         }
 
-        [HttpPost("cookiecheck")]
-        public IActionResult getCookieheader()
-        {
-            System.Diagnostics.Debug.WriteLine("CLIENT REQUEST", HttpContext.Request);
-            return Ok(HttpContext.Request);
-        }
         
         // GET: api/<UserController>
         [HttpGet("addUser/{input}")]

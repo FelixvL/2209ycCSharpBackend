@@ -13,13 +13,25 @@ builder.Services.AddDbContext<SkillDBContext>( options => {
         options.UseSqlServer( builder.Configuration.GetConnectionString("Default"));
 });
 
+/*var allowOrigins = "_allowOrigins";
+builder.Services.AddCors(options =>
+    options.AddPolicy(name: allowOrigins,
+        builder =>
+        {
+            //allowOrigins.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials();
+            builder.WithOrigins("http://localhost/*", "https://localhost/*").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+            //allowOrigins.WithHeaders();
+        });
+});*/
+
+
 var allowOrigins = "_allowOrigins";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: allowOrigins,
         builder =>
         {
-            builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+            builder.WithOrigins("http://localhost/*", "https://localhost/*").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
         });
 });
 
