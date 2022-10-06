@@ -13,10 +13,10 @@ namespace DBContextSkillsDB
     {
         public int Id { get; set; }
         private string name = "Default";
-        private Doel goal;
+        private Goal goal;
         private string description;
 
-        public SubGoal(string name, Doel goal, string description)
+        public SubGoal(string name, Goal goal, string description)
         {
             this.name = name;
             this.goal = goal;
@@ -46,7 +46,7 @@ namespace DBContextSkillsDB
             return name;
         }
 
-        public Doel getGoal()
+        public Goal getGoal()
         {
             return goal;
         }

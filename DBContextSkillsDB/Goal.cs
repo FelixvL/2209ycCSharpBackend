@@ -9,18 +9,18 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace DBContextSkillsDB
 {
-    public class Doel
+    public class Goal
     {
         public int Id { get; set; }
-        public string Naam { get; set; } = "Default";
-        public int Belangrijkheid { get; set; }
-        public ICollection<User> Users { get; set; }
+        public string Name { get; set; } = "Default";
+        public int Priority { get; set; }
+        public List<User> Users = new List<User>();
 
-        public Doel(string naam, int belangrijkheid)
+        public Goal(string name, int priority)
         {
-            this.Naam = naam;
-            this.Belangrijkheid = belangrijkheid;
+            this.Name = name;
+            this.Priority = priority;
         }
-        public Doel() { }
+        public Goal() {}
     }
 }

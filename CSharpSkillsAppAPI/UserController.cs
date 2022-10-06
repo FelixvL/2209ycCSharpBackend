@@ -32,8 +32,14 @@ namespace CSharpSkillsAppAPI
         public UserController(SkillDBContext db) { 
             _db = db;
         }
+        
 
-        //User login
+        //---------------------------------------------------------------------------------
+        //REGISTER
+
+
+
+
         [HttpPost("user/login")]
         public string POST([FromBody] JsonElement userinput)
         {
@@ -41,7 +47,7 @@ namespace CSharpSkillsAppAPI
 
             foreach (User user in _db.users)
             {
-                if (user.UserNaam == userinput.GetProperty("username").ToString())
+                if (user.UserName == userinput.GetProperty("username").ToString())
                 {
                     if (user.Password == userinput.GetProperty("password").ToString())
                     {
@@ -92,7 +98,10 @@ namespace CSharpSkillsAppAPI
         {
             try
             {
-                User user = new User(input, $"User{input}", $"{input}@Hotmail.com", "Password", 1, 1, 1, false);
+                User user = new User(input, $"User{input}", $"{input}@Hotmail.com",
+                    "Password", new DateTime(), "straat", 
+                    17, "2367", "Nieuwegein", 
+                    "Nederland", false) ;
                 _db.users.Add(user);
                 _db.SaveChanges();
                 return new JsonResult(user);
@@ -123,6 +132,21 @@ namespace CSharpSkillsAppAPI
                 //want to return something different, don't know what
             }
         }
+
+        // DELETE api/<UserController>/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            foreach (User user in _db.users)
+            {
+                if (user.Id == id)
+                {
+                    _db.users.Remove(user);
+                }
+            }
+            _db.SaveChanges();
+        }
+
         //-------------------------------------------------------------------------
 
 
@@ -151,7 +175,7 @@ namespace CSharpSkillsAppAPI
 
         // Change user
         [HttpPut("changeUserDetails")]
-        public JsonResult ChangeUserDetails(int givenid, String name, String username, 
+        public JsonResult ChangeUserDetails(int givenid, String name, String username,
             String email)
         {
             User user;
@@ -159,13 +183,13 @@ namespace CSharpSkillsAppAPI
             {
                 user = _db.users.Find(givenid);
 
-                if (user.Naam != name) 
+                if (user.Name != name)
                 {
-                    user.Naam = name;
+                    user.Name = name;
                 }
-                if (user.UserNaam != username)
+                if (user.UserName != username)
                 {
-                    user.UserNaam = username;
+                    user.UserName = username;
                 }
                 if (user.Email != email)
                 {
@@ -188,6 +212,55 @@ namespace CSharpSkillsAppAPI
                 //want to return something different, don't know what
             }
         }
+
+
+        [HttpPost("addUser/{name}/{username}/{email}/{password}/{dateofbirth}/{street}/{housenumber}/{postalcode}/{city}/{country}/{isexpert}")]
+        public bool GetAddUserWithInput(string name, string username, string email, string password, DateTime dateofbirth, string street, int housenumber, string postalcode, string city, string country, bool isexpert)
+        {
+            foreach (User user in _db.users)
+            {
+                if (user.UserName == username)
+                {
+                    Console.WriteLine("That username already exists");
+                    return false;
+                //} else if (user.Email == emailInput) {
+                    //Console.WriteLine("That Email is already in use");
+                    //return false;
+                }
+            }
+            User potentialUser = new User(name, username, email, password, dateofbirth, street, housenumber, postalcode, city, country, false);
+            _db.users.Add(potentialUser);
+            _db.SaveChanges();
+            return true;
+        }
+
+
+
+        [HttpGet("addDoelToUser/{activeUser}/{goalID}")]
+        public void AddGoalToUser(int userID, int goalID)
+        {
+            User activeUser = null;
+            Goal goalToAdd = null;
+            foreach (Goal goal in _db.goals)
+            {
+               if (goal.Id == goalID)
+                {
+                    goalToAdd = goal;
+                }
+            }
+            foreach (User user in _db.users) { 
+                if (user.Id == userID)
+                {
+                    activeUser = user;
+                }
+            }
+            if((activeUser != null) && (goalToAdd != null))
+            {
+                activeUser.addDoel(goalToAdd);
+                _db.SaveChanges();
+                Console.WriteLine(activeUser.Goals);
+            }
+        }
         //-------------------------------------------------------------------------
 
 
@@ -197,7 +270,7 @@ namespace CSharpSkillsAppAPI
         //EXAMPLES?
         // POST api/<UserController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Goal goal)
         {
         }
 
@@ -205,7 +278,6 @@ namespace CSharpSkillsAppAPI
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
-        }
 
         [HttpDelete("{id}")]
         public void Delete(int id)

@@ -8,52 +8,69 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using DBContextSkillsDB;
+=========
+using DBContextSkillsDB;
 
 
 namespace DBContextSkillsDB
 {
-    [Index(nameof(User.UserNaam), IsUnique = true)]
+    [Index(nameof(User.UserName), IsUnique = true)]
     [Index(nameof(User.Email), IsUnique = true)]
     public class User
-    {
-        [Key]
-        public int Id { get; set; }
-        public string Naam { get; set; } = "John Doe";
-        public string UserNaam { get; set; } = "JD";
-        public string Email { get; set; } = "JohnDoe@Hotmail.com";
-        public string Password { get; set; } = "Password";
-        public int Points { get; set; }
-        public int GoalProgress { get; set; }
-        public int SubGoalProgress { get; set; }
+        public int Id { set; get; }
+        public string Name { set; get; }
+        public string UserName { set; get; }
+        public string Email { set; get; }
+        public string Password { set; get; }
+        public DateTime DateOfBirth { set; get; }
+        public string Street { set; get; }
+        public int HouseNumber { set; get; }
+        public string PostalCode { set; get; }
+        public string City { set; get; }
+        public string Country { set; get; }
+        public int Points { set; get; } = 0;
+        public int GoalProgress { set; get; } = 0;
+        public int SubGoalProgress { set; get; } = 0;
+        public bool IsExpert { set; get; }
+
+        public List<Goal> Goals = new List<Goal>();
+
         public bool IsExpert { get; set; }
+        public List<Goal> getDoelen()
 
-        private List<Doel> doelen = new List<Doel>();
-        public List<Doel> getDoelen()
+            return this.Goals;
         {
-            return doelen;
+            return this.Doelen;
         }
-        public void addDoel(Doel doel)
+            this.Goals.Add(goal);
+            Console.WriteLine(Goals);
+            this.Doelen.Add(doel);
+            Console.WriteLine(Doelen);
+        }
+            this.Goals.Remove(goal);
         {
-            doelen.Add(doel);
+            this.Doelen.Remove(doel);
         }
-        public void removeDoel(Doel doel)
-        {
-            //doelen.Remove();
-        }
+        public User(string name, string username, string email, 
+            string password, DateTime dateofbirth, string street, 
+            int housenumber, string postalcode, string city, 
+            string country, bool isexpert)
 
-
-        public User(string naam, string usernaam, string email, string password, int points, int goalprogress, int subgoalprogress, bool isexpert)
+        public User(string naam, string usernaam, string email, string password, bool isexpert)
         {
-            this.Naam = naam;
-            this.UserNaam = usernaam;
+            this.Name = name;
+            this.UserName = username;
+            this.DateOfBirth = dateofbirth;
+            this.Street = street;
+            this.HouseNumber = housenumber;
+            this.PostalCode = postalcode;
+            this.City = city;
+            this.Country = country;
             this.Email = email;
             this.Password = password;
-            this.Points = points;
-            this.GoalProgress = goalprogress;
-            this.SubGoalProgress = subgoalprogress;
-            this.IsExpert = isexpert;
-        }
 
-        public User() { }
+        public User() {}
+        public User() {}
+>>>>>>>>> Temporary merge branch 2
     }
 }

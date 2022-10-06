@@ -12,7 +12,7 @@ namespace DBContextSkillsDB
     {
         public SkillDBContext(DbContextOptions options) : base(options) { }
         [AllowNull]
-        public DbSet<Doel> doelen { get; set; }
+        public DbSet<Goal> goals { get; set; }
         [AllowNull]
         public DbSet<SubGoal> subgoal { get; set; }
         [AllowNull]
