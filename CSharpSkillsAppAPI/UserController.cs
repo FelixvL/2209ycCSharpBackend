@@ -29,15 +29,10 @@ namespace CSharpSkillsAppAPI
     {
         private SkillDBContext _db;
 
-        public UserController(SkillDBContext db) { 
+        public UserController(SkillDBContext db)
+        {
             _db = db;
         }
-        
-
-        //---------------------------------------------------------------------------------
-        //REGISTER
-
-
 
 
         [HttpPost("user/login")]
@@ -55,8 +50,8 @@ namespace CSharpSkillsAppAPI
                         var userInfo = new
                         {
                             id = user.Id,
-                            username = user.UserNaam,
-                            name = user.Naam,
+                            username = user.UserName,
+                            name = user.Name,
                             email = user.Email,
                         };
                         var jsonInfo = JsonSerializer.Serialize(userInfo);
@@ -80,11 +75,11 @@ namespace CSharpSkillsAppAPI
         [HttpGet("addDoelToUser/{user}/{doelID}")]
         public void AddGoalToUser(User user, int doelID)
         {
-            foreach (Doel goal in _db.doelen)
+            foreach (Goal goal in _db.goals)
             {
                 if (goal.Id == doelID)
                 {
-                    user.addDoel(goal);
+                    user.addGoal(goal);
                 }
             }
         }
@@ -92,27 +87,6 @@ namespace CSharpSkillsAppAPI
         //---------------------------------------------------------------------------------
         //register user
 
-        // Add user
-        /*[HttpGet("addUser/{input}")]
-        public JsonResult GetAddUserWithInput(string input)
-        {
-            try
-            {
-                User user = new User(input, $"User{input}", $"{input}@Hotmail.com",
-                    "Password", new DateTime(), "straat", 
-                    17, "2367", "Nieuwegein", 
-                    "Nederland", false) ;
-                _db.users.Add(user);
-                _db.SaveChanges();
-                return new JsonResult(user);
-            }
-            catch (DbUpdateException e)
-            {
-                Console.WriteLine(e);
-                return new JsonResult(e);
-                //want to return something different, don't know what
-            }
-        }*/
 
         // Add user
         [HttpGet("addUser")]
@@ -215,28 +189,26 @@ namespace CSharpSkillsAppAPI
 
 
         [HttpPost("addUser/{name}/{username}/{email}/{password}/{dateofbirth}/{street}/{housenumber}/{postalcode}/{city}/{country}/{isexpert}")]
-        public bool GetAddUserWithInput(string name, string username, string email, string password, DateTime dateofbirth, string street, int housenumber, string postalcode, string city, string country, bool isexpert)
+        public bool GetAddUserWithInput(string name, string username, string email,
+            string password, DateTime dateofbirth, string street,
+            int housenumber, string postalcode, string city,
+            string country, bool isexpert)
         {
-            foreach (User user in _db.users)
+            try
             {
-                if (user.UserName == username)
-                {
-                    Console.WriteLine("That username already exists");
-                    return false;
-                //} else if (user.Email == emailInput) {
-                    //Console.WriteLine("That Email is already in use");
-                    //return false;
-                }
+                _db.users.Add(new User(name, username, email, password, dateofbirth, street, housenumber, postalcode, city, country, false));
+                _db.SaveChanges();
+                return true;
             }
-            User potentialUser = new User(name, username, email, password, dateofbirth, street, housenumber, postalcode, city, country, false);
-            _db.users.Add(potentialUser);
-            _db.SaveChanges();
-            return true;
+            catch (DbUpdateException e)
+            {
+                return false;
+            }
         }
 
 
 
-        [HttpGet("addDoelToUser/{activeUser}/{goalID}")]
+        [HttpGet("addGoalToUser/{activeUser}/{goalID}")]
         public void AddGoalToUser(int userID, int goalID)
         {
             User activeUser = null;
@@ -256,7 +228,7 @@ namespace CSharpSkillsAppAPI
             }
             if((activeUser != null) && (goalToAdd != null))
             {
-                activeUser.addDoel(goalToAdd);
+                activeUser.addGoal(goalToAdd);
                 _db.SaveChanges();
                 Console.WriteLine(activeUser.Goals);
             }
@@ -277,19 +249,6 @@ namespace CSharpSkillsAppAPI
         // PUT api/<UserController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
-        {
-
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-            foreach (User user in _db.users)
-            {
-                if (user.Id == id)
-                {
-                    _db.users.Remove(user);
-                }
-            }
-            _db.SaveChanges();
-        }
+        { }
     }
 }

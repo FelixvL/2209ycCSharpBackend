@@ -26,6 +26,7 @@ _UpgradeReport_Files/
 bin/
 obj/
 TestResults/
+DBContextSkillsDB/Migrations/
 ###################
 # Web publish log #
 ###################
@@ -74,3 +75,4 @@ _[Ss]cripts
 *.nupkg
 *.ncrunchsolution
 *.dot[Cc]over
+

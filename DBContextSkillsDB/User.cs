@@ -7,16 +7,16 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using DBContextSkillsDB;
-=========
-using DBContextSkillsDB;
+using System.Diagnostics.Metrics;
+using System.IO;
+using System.Xml.Linq;
 
 
 namespace DBContextSkillsDB
 {
     [Index(nameof(User.UserName), IsUnique = true)]
     [Index(nameof(User.Email), IsUnique = true)]
-    public class User
+    public class User {
         public int Id { set; get; }
         public string Name { set; get; }
         public string UserName { set; get; }
@@ -35,28 +35,12 @@ namespace DBContextSkillsDB
 
         public List<Goal> Goals = new List<Goal>();
 
-        public bool IsExpert { get; set; }
-        public List<Goal> getDoelen()
+        public User() {}
 
-            return this.Goals;
-        {
-            return this.Doelen;
-        }
-            this.Goals.Add(goal);
-            Console.WriteLine(Goals);
-            this.Doelen.Add(doel);
-            Console.WriteLine(Doelen);
-        }
-            this.Goals.Remove(goal);
-        {
-            this.Doelen.Remove(doel);
-        }
-        public User(string name, string username, string email, 
-            string password, DateTime dateofbirth, string street, 
-            int housenumber, string postalcode, string city, 
+        public User(string name, string username, string email,
+            string password, DateTime dateofbirth, string street,
+            int housenumber, string postalcode, string city,
             string country, bool isexpert)
-
-        public User(string naam, string usernaam, string email, string password, bool isexpert)
         {
             this.Name = name;
             this.UserName = username;
@@ -68,9 +52,21 @@ namespace DBContextSkillsDB
             this.Country = country;
             this.Email = email;
             this.Password = password;
+        }
 
-        public User() {}
-        public User() {}
->>>>>>>>> Temporary merge branch 2
+        public List<Goal> getDoelen()
+        {
+            return this.Goals;
+        }
+
+        public void addGoal(Goal goal) {
+            this.Goals.Add(goal);
+            Console.WriteLine(Goals);
+        }
+        public void removeGoal(Goal goal) {
+            this.Goals.Remove(goal);
+        }
     }
 }
+
+
