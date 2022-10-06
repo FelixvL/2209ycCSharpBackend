@@ -7,6 +7,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using DBContextSkillsDB;
+=========
+using DBContextSkillsDB;
 
 
 namespace DBContextSkillsDB
@@ -14,8 +17,6 @@ namespace DBContextSkillsDB
     [Index(nameof(User.UserName), IsUnique = true)]
     [Index(nameof(User.Email), IsUnique = true)]
     public class User
-    {
-        [Key]
         public int Id { set; get; }
         public string Name { set; get; }
         public string UserName { set; get; }
@@ -34,40 +35,42 @@ namespace DBContextSkillsDB
 
         public List<Goal> Goals = new List<Goal>();
 
-
+        public bool IsExpert { get; set; }
         public List<Goal> getDoelen()
-        {
+
             return this.Goals;
-        }
-        public void addDoel(Goal goal)
         {
+            return this.Doelen;
+        }
             this.Goals.Add(goal);
             Console.WriteLine(Goals);
+            this.Doelen.Add(doel);
+            Console.WriteLine(Doelen);
         }
-        public void removeDoel(Goal goal)
-        {
             this.Goals.Remove(goal);
+        {
+            this.Doelen.Remove(doel);
         }
-
-
         public User(string name, string username, string email, 
             string password, DateTime dateofbirth, string street, 
             int housenumber, string postalcode, string city, 
             string country, bool isexpert)
+
+        public User(string naam, string usernaam, string email, string password, bool isexpert)
         {
             this.Name = name;
             this.UserName = username;
-            this.Email = email;
-            this.Password = password;
             this.DateOfBirth = dateofbirth;
             this.Street = street;
             this.HouseNumber = housenumber;
             this.PostalCode = postalcode;
             this.City = city;
             this.Country = country;
-            this.IsExpert = isexpert;
-        }
+            this.Email = email;
+            this.Password = password;
 
         public User() {}
+        public User() {}
+>>>>>>>>> Temporary merge branch 2
     }
 }

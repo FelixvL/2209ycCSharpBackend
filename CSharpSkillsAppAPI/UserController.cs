@@ -1,10 +1,23 @@
 ﻿using DBContextSkillsDB;
+
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+
+using System;
+using System.Net;
+using System.Net.Http.Json;
+using System.Net.Mime;
+using System.Runtime.InteropServices;
+using System.Security.AccessControl;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.Data.SqlClient;
-using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,35 +41,59 @@ namespace CSharpSkillsAppAPI
 
 
         [HttpPost("user/login")]
-        public bool POST([FromBody] JsonElement userinput)
+        public string POST([FromBody] JsonElement userinput)
         {
+            object message = new { Message = " " };
+
             foreach (User user in _db.users)
             {
                 if (user.UserName == userinput.GetProperty("username").ToString())
                 {
-                    if(user.Password == userinput.GetProperty("password").ToString())
+                    if (user.Password == userinput.GetProperty("password").ToString())
                     {
-                        Console.WriteLine("Login succesful!");
-                        return true;
-                    } else
+                        //If username exists AND password is correct, send back json. In client store it in a localStorage
+                        var userInfo = new
+                        {
+                            id = user.Id,
+                            username = user.UserNaam,
+                            name = user.Naam,
+                            email = user.Email,
+                        };
+                        var jsonInfo = JsonSerializer.Serialize(userInfo);
+                        return jsonInfo.ToString();
+                    }
+                    else
                     {
-                        Console.WriteLine("Wrong password");
-                        return false;
+                        message = new { Message = "Wrong password" };
+                        var jsonPass = JsonSerializer.Serialize(message);
+                        return jsonPass.ToString();
                     }
                 }
             }
-            Console.WriteLine("User not found");
-            return false;
+
+            message = new { Message = "User does not exist" };
+            var json = JsonSerializer.Serialize(message);
+            return json.ToString();
         }
-        
 
+        //Add goal to user
+        [HttpGet("addDoelToUser/{user}/{doelID}")]
+        public void AddGoalToUser(User user, int doelID)
+        {
+            foreach (Doel goal in _db.doelen)
+            {
+                if (goal.Id == doelID)
+                {
+                    user.addDoel(goal);
+                }
+            }
+        }
 
+        //---------------------------------------------------------------------------------
+        //register user
 
-
-
-        
-        // GET: api/<UserController>
-        [HttpGet("addUser/{input}")]
+        // Add user
+        /*[HttpGet("addUser/{input}")]
         public JsonResult GetAddUserWithInput(string input)
         {
             try
@@ -75,9 +112,9 @@ namespace CSharpSkillsAppAPI
                 return new JsonResult(e);
                 //want to return something different, don't know what
             }
-        }
+        }*/
 
-        // GET: api/<UserController>
+        // Add user
         [HttpGet("addUser")]
         public JsonResult GetAddUser()
         {
@@ -120,7 +157,7 @@ namespace CSharpSkillsAppAPI
         //USER DETAILS
 
         // GET: api/<UserController>
-        [HttpPost("getUserDetails")]
+        /*[HttpPost("getUserDetails")]
         public JsonResult GetUserDetails(int givenid)
         {
             try
@@ -134,9 +171,9 @@ namespace CSharpSkillsAppAPI
                 return new JsonResult(e);
                 //want to return something different, don't know what
             }
-        }
+        }*/
 
-        // PUT: api/<UserController>
+        // Change user
         [HttpPut("changeUserDetails")]
         public JsonResult ChangeUserDetails(int givenid, String name, String username,
             String email)
@@ -242,6 +279,17 @@ namespace CSharpSkillsAppAPI
         public void Put(int id, [FromBody] string value)
         {
 
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            foreach (User user in _db.users)
+            {
+                if (user.Id == id)
+                {
+                    _db.users.Remove(user);
+                }
+            }
+            _db.SaveChanges();
         }
     }
 }

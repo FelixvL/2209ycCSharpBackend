@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DBContextSkillsDB.Migrations
 {
-    public partial class test : Migration
+    public partial class getalltables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,13 +54,29 @@ namespace DBContextSkillsDB.Migrations
                     Points = table.Column<int>(type: "int", nullable: false),
                     GoalProgress = table.Column<int>(type: "int", nullable: false),
                     SubGoalProgress = table.Column<int>(type: "int", nullable: false),
-                    IsExpert = table.Column<bool>(type: "bit", nullable: false)
+                    IsExpert = table.Column<bool>(type: "bit", nullable: false),
+                    DoelId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_users", x => x.Id);
+<<<<<<<< HEAD:DBContextSkillsDB/Migrations/20221005132906_test.cs
                 });
 
+========
+                    table.ForeignKey(
+                        name: "FK_users_doelen_DoelId",
+                        column: x => x.DoelId,
+                        principalTable: "doelen",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_users_DoelId",
+                table: "users",
+                column: "DoelId");
+
+>>>>>>>> master:DBContextSkillsDB/Migrations/20221005145511_get all tables.cs
             migrationBuilder.CreateIndex(
                 name: "IX_users_Email",
                 table: "users",
@@ -77,13 +93,22 @@ namespace DBContextSkillsDB.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+<<<<<<<< HEAD:DBContextSkillsDB/Migrations/20221005132906_test.cs
                 name: "goals");
 
             migrationBuilder.DropTable(
+========
+>>>>>>>> master:DBContextSkillsDB/Migrations/20221005145511_get all tables.cs
                 name: "subgoal");
 
             migrationBuilder.DropTable(
                 name: "users");
+<<<<<<<< HEAD:DBContextSkillsDB/Migrations/20221005132906_test.cs
+========
+
+            migrationBuilder.DropTable(
+                name: "doelen");
+>>>>>>>> master:DBContextSkillsDB/Migrations/20221005145511_get all tables.cs
         }
     }
 }
