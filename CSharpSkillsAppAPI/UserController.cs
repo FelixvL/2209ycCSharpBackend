@@ -70,7 +70,7 @@ namespace CSharpSkillsAppAPI
             return json.ToString();
         }
 
-
+        //Add goal to user
         [HttpGet("addDoelToUser/{user}/{doelID}")]
         public void AddGoalToUser(User user, int doelID)
         {
@@ -84,10 +84,10 @@ namespace CSharpSkillsAppAPI
         }
 
         //---------------------------------------------------------------------------------
-        //REGISTER
+        //register user
 
-        // GET: api/<UserController>
-        [HttpGet("addUser/{input}")]
+        // Add user
+        /*[HttpGet("addUser/{input}")]
         public JsonResult GetAddUserWithInput(string input)
         {
             try
@@ -103,9 +103,9 @@ namespace CSharpSkillsAppAPI
                 return new JsonResult(e);
                 //want to return something different, don't know what
             }
-        }
+        }*/
 
-        // GET: api/<UserController>
+        // Add user
         [HttpGet("addUser")]
         public JsonResult GetAddUser()
         {
@@ -149,7 +149,7 @@ namespace CSharpSkillsAppAPI
             }
         }*/
 
-        // PUT: api/<UserController>
+        // Change user
         [HttpPut("changeUserDetails")]
         public JsonResult ChangeUserDetails(int givenid, String name, String username, 
             String email)
