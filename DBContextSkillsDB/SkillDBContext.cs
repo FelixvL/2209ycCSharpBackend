@@ -17,5 +17,11 @@ namespace DBContextSkillsDB
         public DbSet<SubGoal> subgoal { get; set; }
         [AllowNull]
         public DbSet<User> users { get; set; }
+        public DbSet<UserGoal> usergoal { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserGoal>().HasKey(sc => new { sc.UserId, sc.GoalId });
+        }
     }
 }

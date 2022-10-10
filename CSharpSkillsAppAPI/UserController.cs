@@ -71,18 +71,6 @@ namespace CSharpSkillsAppAPI
             return json.ToString();
         }
 
-        //Add goal to user
-        [HttpGet("addDoelToUser/{user}/{doelID}")]
-        public void AddGoalToUser(User user, int doelID)
-        {
-            foreach (Goal goal in _db.goals)
-            {
-                if (goal.Id == doelID)
-                {
-                    user.addGoal(goal);
-                }
-            }
-        }
 
         //---------------------------------------------------------------------------------
         //register user
@@ -208,8 +196,8 @@ namespace CSharpSkillsAppAPI
 
 
 
-        [HttpGet("addGoalToUser/{activeUser}/{goalID}")]
-        public void AddGoalToUser(int userID, int goalID)
+        [HttpGet("AddUserGoal/{userID}/{goalID}")]
+        public void AddUserGoal(int userID, int goalID)
         {
             User activeUser = null;
             Goal goalToAdd = null;
@@ -228,9 +216,11 @@ namespace CSharpSkillsAppAPI
             }
             if((activeUser != null) && (goalToAdd != null))
             {
-                activeUser.addGoal(goalToAdd);
+                UserGoal newRelation = new UserGoal();
+                newRelation.UserId = userID;
+                newRelation.GoalId = goalID;
+                _db.usergoal.Add(newRelation);
                 _db.SaveChanges();
-                Console.WriteLine(activeUser.Goals);
             }
         }
         //-------------------------------------------------------------------------
