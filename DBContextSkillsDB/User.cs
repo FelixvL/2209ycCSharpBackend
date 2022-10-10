@@ -52,6 +52,7 @@ namespace DBContextSkillsDB
             this.Country = country;
             this.Email = email;
             this.Password = password;
+            this.IsExpert = isexpert;
         }
 
         public List<Goal> getDoelen()

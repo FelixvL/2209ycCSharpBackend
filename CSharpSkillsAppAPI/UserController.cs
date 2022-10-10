@@ -36,7 +36,7 @@ namespace CSharpSkillsAppAPI
 
 
         [HttpPost("user/login")]
-        public string POST([FromBody] JsonElement userinput)
+        public string LoginPOST([FromBody] JsonElement userinput)
         {
             object message = new { Message = " " };
 
@@ -77,7 +77,7 @@ namespace CSharpSkillsAppAPI
 
 
         // Add user
-        [HttpGet("addUser")]
+        /*[HttpGet("addUser")]
         public JsonResult GetAddUser()
         {
             try 
@@ -93,7 +93,7 @@ namespace CSharpSkillsAppAPI
                 return new JsonResult(e);
                 //want to return something different, don't know what
             }
-        }
+        }*/
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
@@ -175,7 +175,39 @@ namespace CSharpSkillsAppAPI
             }
         }
 
+        [HttpPost("addUser")]
+        public bool AddUserPOST([FromBody] JsonElement userinput)
+        {
+            try
+            {
+                if (userinput.GetProperty("name").ToString() != null
+                    && userinput.GetProperty("username").ToString() != null
+                    && userinput.GetProperty("email").ToString() != null
+                    && userinput.GetProperty("password").ToString() != null)
+                {
+                    User newUser = new User();
+                    newUser.Name = userinput.GetProperty("name").ToString();
+                    newUser.UserName = userinput.GetProperty("username").ToString();
+                    newUser.Email = userinput.GetProperty("email").ToString();
+                    newUser.Password = userinput.GetProperty("password").ToString();
+                    newUser.IsExpert = bool.Parse(userinput.GetProperty("isexpert").ToString());
+                    _db.users.Add(newUser);
+                    _db.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                return false;
+            }
+        }
 
+
+        /*
         [HttpPost("addUser/{name}/{username}/{email}/{password}/{dateofbirth}/{street}/{housenumber}/{postalcode}/{city}/{country}/{isexpert}")]
         public bool GetAddUserWithInput(string name, string username, string email,
             string password, DateTime dateofbirth, string street,
@@ -193,6 +225,7 @@ namespace CSharpSkillsAppAPI
                 return false;
             }
         }
+        */
 
 
 
