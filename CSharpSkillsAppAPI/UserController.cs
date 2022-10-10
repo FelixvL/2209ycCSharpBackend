@@ -18,6 +18,7 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -209,21 +210,41 @@ namespace CSharpSkillsAppAPI
         }
 
 
-        [HttpPost("addUser/{name}/{username}/{email}/{password}/{dateofbirth}/{street}/{housenumber}/{postalcode}/{city}/{country}/{isexpert}")]
-        public bool GetAddUserWithInput(string name, string username, string email,
-            string password, DateTime dateofbirth, string street,
-            int housenumber, string postalcode, string city,
-            string country, bool isexpert)
+        [HttpPost("addUser")]
+        public string AddUserPOST([FromBody] JsonElement userinput)
         {
             try
             {
-                _db.users.Add(new User(name, username, email, password, dateofbirth, street, housenumber, postalcode, city, country, false));
-                _db.SaveChanges();
-                return true;
+                if (userinput.GetProperty("name").ToString() != null
+                    && userinput.GetProperty("username").ToString() != null
+                    && userinput.GetProperty("email").ToString() != null
+                    && userinput.GetProperty("password").ToString() != null)
+                {
+                    User newUser = new User();
+                    newUser.Name = userinput.GetProperty("name").ToString();
+                    newUser.DateOfBirth = DateTime.Parse(userinput.GetProperty("dateOfBirth").ToString());
+                    newUser.UserName = userinput.GetProperty("username").ToString();
+                    newUser.Email = userinput.GetProperty("email").ToString();
+                    newUser.Password = userinput.GetProperty("password").ToString();
+                    newUser.Street = userinput.GetProperty("street").ToString();
+                    newUser.HouseNumber = Int32.Parse(userinput.GetProperty("houseNumber").ToString());
+                    newUser.PostalCode = userinput.GetProperty("postalCode").ToString();
+                    newUser.City = userinput.GetProperty("city").ToString();
+                    newUser.Country = userinput.GetProperty("country").ToString();
+                    newUser.IsExpert = bool.Parse(userinput.GetProperty("isExpert").ToString());
+
+                    _db.users.Add(newUser);
+                    _db.SaveChanges();
+                    return "Account registered";
+                }
+                else
+                {
+                    return "Not all fields were filled in";
+                }
             }
             catch (DbUpdateException e)
             {
-                return false;
+                return e.InnerException.Message.ToString();  
             }
         }
 
