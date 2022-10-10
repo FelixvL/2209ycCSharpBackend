@@ -22,5 +22,10 @@ namespace DBContextSkillsDB
             this.Priority = priority;
         }
         public Goal() {}
+
+        public Goal getGoal()
+        {
+            return this;
+        }
     }
 }

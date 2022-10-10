@@ -29,27 +29,20 @@ namespace CSharpSkillsAppAPI
             _db.SaveChanges();
         }
 
-        [HttpGet("tweede")]
-        public IEnumerable<Goal> GetTweede()
+        [HttpPost("tweede")]
+        public IEnumerable<Goal> GetAllGoals()
         {
             return _db.goals;
         }
-        [HttpGet("derde/{input}")]
-        public IEnumerable<Goal> GetDerde(string input)
+
+        [HttpPost("postgoal/{givenid}")]
+        public JsonResult PostGoal(int givenid)
         {
-            Goal doel= new Goal(input, 2);
-            _db.goals.Add(doel);
-            _db.SaveChanges();
-            return _db.goals;
+            return new JsonResult(_db.goals.Find(givenid)); 
         }
 
-        // GET api/<DoelController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
+        //=================================EXAMPLES=================================
         // POST api/<DoelController>
         [HttpPost]
         public void Post([FromBody] string value)

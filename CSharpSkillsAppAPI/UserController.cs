@@ -72,7 +72,7 @@ namespace CSharpSkillsAppAPI
         }
 
         //Add goal to user
-        [HttpGet("addDoelToUser/{user}/{doelID}")]
+        [HttpGet("addGoalToUser/{user}/{doelID}")]
         public void AddGoalToUser(User user, int doelID)
         {
             foreach (Goal goal in _db.goals)
@@ -90,7 +90,7 @@ namespace CSharpSkillsAppAPI
 
         // Add user
         [HttpGet("addUser")]
-        public JsonResult GetAddUser()
+        public JsonResult AddUser()
         {
             try 
             { 
