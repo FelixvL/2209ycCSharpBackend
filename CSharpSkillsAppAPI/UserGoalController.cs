@@ -24,7 +24,7 @@ namespace CSharpSkillsAppAPI
         //---------------------------------------------------------------------------------
         //USERGOAL ENDPOINTS
 
-        [HttpGet("AddUserGoal")]
+        [HttpPost("AddUserGoal")]
         public void AddUserGoal([FromBody] JsonElement userinput)
         {
             Int32.TryParse(userinput.GetProperty("goalid").ToString(), out int goalID);
