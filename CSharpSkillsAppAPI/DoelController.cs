@@ -19,8 +19,6 @@ namespace CSharpSkillsAppAPI
         
         // GET: api/<DoelController>
 
-
-
         [HttpGet("addGoal/{name}/{priority}")]
         public void AddGoal()
         {
@@ -35,10 +33,24 @@ namespace CSharpSkillsAppAPI
             return _db.goals;
         }
 
-        [HttpPost("postgoal/{givenid}")]
-        public JsonResult PostGoal(int givenid)
+
+        //returns goal
+        [HttpPost("postgoal/{givengoalid}")]
+        public JsonResult PostGoal(int givengoalid)
         {
-            return new JsonResult(_db.goals.Find(givenid)); 
+            return new JsonResult(_db.goals.Find(givengoalid)); 
+        }
+
+        //returns all subgoals related to goal
+        [HttpPost("postsubgoals/{givengoalid}")]
+        public JsonResult PostSubGoals(int givengoalid)
+        {
+            var query = from GoalSubGoal in _db.Set<GoalSubGoal>()
+                        join SubGoal in _db.Set<SubGoal>()
+                        on GoalSubGoal.SubGoalID equals SubGoal.Id
+                        select new { GoalSubGoal.GoalID, GoalSubGoal.SubGoalID, SubGoal.name, SubGoal.description };
+
+            return new JsonResult(query);
         }
 
 

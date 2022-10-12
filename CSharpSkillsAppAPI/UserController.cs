@@ -189,7 +189,7 @@ namespace CSharpSkillsAppAPI
 
 
         [HttpPost("addUser/{name}/{username}/{email}/{password}/{dateofbirth}/{street}/{housenumber}/{postalcode}/{city}/{country}/{isexpert}")]
-        public bool GetAddUserWithInput(string name, string username, string email,
+        public bool PostAddUserWithInput(string name, string username, string email,
             string password, DateTime dateofbirth, string street,
             int housenumber, string postalcode, string city,
             string country, bool isexpert)
@@ -232,6 +232,8 @@ namespace CSharpSkillsAppAPI
                 _db.SaveChanges();
                 Console.WriteLine(activeUser.Goals);
             }
+
+            
         }
         //-------------------------------------------------------------------------
 
