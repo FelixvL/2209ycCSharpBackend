@@ -7,30 +7,37 @@ namespace CSharpSkillsAppAPI
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DoelController : ControllerBase
+    public class GoalController : ControllerBase
     {
         private SkillDBContext _db;
 
 
-        public DoelController(SkillDBContext db) { 
+        public GoalController(SkillDBContext db) { 
             _db = db;
         }
-        
-        
-        // GET: api/<DoelController>
 
-        [HttpGet("addGoal/{name}/{priority}")]
-        public void AddGoal()
+
+        // GET: api/<DoelController>
+        [HttpGet("allGoals")]
+        public List<Goal> GetAllGoals()
         {
-            Goal d = new Goal("testgoal", 1);
-            _db.goals.Add(d);
-            _db.SaveChanges();
+            List<Goal> goals = new List<Goal>();
+            foreach (Goal goal in _db.goals)
+            {
+                goals.Add(goal);
+            }
+            //var json = JsonSerializer.Serialize(goals);
+            return goals;
         }
 
-        [HttpPost("tweede")]
-        public IEnumerable<Goal> GetAllGoals()
+
+
+        [HttpGet("addGoal/{name}/{category}/{description}/{maximumpoints}/{priority}")]
+        public void AddGoal(string name, string category, string description, int maximumpoints, int priority)
         {
-            return _db.goals;
+            Goal d = new Goal(name, category, description, maximumpoints, priority);
+            _db.goals.Add(d);
+            _db.SaveChanges();
         }
 
 
@@ -51,26 +58,6 @@ namespace CSharpSkillsAppAPI
                         select new { GoalSubGoal.GoalID, GoalSubGoal.SubGoalID, SubGoal.name, SubGoal.description };
 
             return new JsonResult(query);
-        }
-
-
-        //=================================EXAMPLES=================================
-        // POST api/<DoelController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<DoelController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<DoelController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
