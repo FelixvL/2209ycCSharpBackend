@@ -48,7 +48,12 @@ namespace CSharpSkillsAppAPI
                     {
                         //If username exists AND password is correct, send back json. In client store it in a localStorage
                         var userInfo = new
-                        { id = user.Id };
+                        {
+                            id = user.Id,
+                            username = user.UserName,
+                            name = user.Name,
+                            email = user.Email,
+                        };
                         var jsonInfo = JsonSerializer.Serialize(userInfo);
                         return jsonInfo.ToString();
                     }
@@ -131,8 +136,10 @@ namespace CSharpSkillsAppAPI
         {
             try
             {
+                System.Diagnostics.Debug.WriteLine("json: ", jsonElem);
                 int givenid = Int32.Parse(jsonElem.GetProperty("userId").ToString());
                 JsonResult result = new JsonResult(_db.users.Find(givenid));
+                System.Diagnostics.Debug.WriteLine("Request ID: ", givenid);
                 return result;
             }
             catch (NullReferenceException e)
@@ -145,50 +152,25 @@ namespace CSharpSkillsAppAPI
 
         // Change user
         [HttpPut("changeUserDetails")]
-        public JsonResult ChangeUserDetails(JsonElement jsonElem)
+        public JsonResult ChangeUserDetails(int givenid, String name, String username,
+            String email)
         {
             User user;
-
-            int givenid = Int32.Parse(jsonElem.GetProperty("id").ToString());
-            int housenumber = Int32.Parse(jsonElem.GetProperty("houseNumber").ToString());
-
             try
             {
                 user = _db.users.Find(givenid);
-                System.Diagnostics.Debug.WriteLine("USER FOUND", jsonElem.ToString());
 
-                //Add checks for sql injection
-                if (user.Name != jsonElem.GetProperty("name").ToString())
+                if (user.Name != name)
                 {
-                    user.Name = jsonElem.GetProperty("name").ToString();
+                    user.Name = name;
                 }
-                /*if (user.UserName != username)
+                if (user.UserName != username)
                 {
                     user.UserName = username;
-                }*/
-                if (user.Email != jsonElem.GetProperty("email").ToString())
-                {
-                    user.Email = jsonElem.GetProperty("email").ToString();
                 }
-                if (user.Street != jsonElem.GetProperty("street").ToString())
+                if (user.Email != email)
                 {
-                    user.Street = jsonElem.GetProperty("street").ToString();
-                }
-                if (user.HouseNumber != housenumber)
-                {
-                    user.HouseNumber = Int32.Parse(jsonElem.GetProperty("houseNumber").ToString());
-                }
-                if (user.PostalCode != jsonElem.GetProperty("postalCode").ToString())
-                {
-                    user.PostalCode = jsonElem.GetProperty("postalCode").ToString();
-                }
-                if (user.City != jsonElem.GetProperty("city").ToString())
-                {
-                    user.City = jsonElem.GetProperty("city").ToString();
-                }
-                if (user.Country != jsonElem.GetProperty("country").ToString())
-                {
-                    user.Country = jsonElem.GetProperty("country").ToString();
+                    user.Email = email;
                 }
 
                 _db.SaveChanges();
