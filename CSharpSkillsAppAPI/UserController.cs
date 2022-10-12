@@ -19,11 +19,15 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Collections;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CSharpSkillsAppAPI
 {
+    //---------------------------------------------------------------------------------
+    //API CONTROLLER
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -36,8 +40,11 @@ namespace CSharpSkillsAppAPI
         }
 
 
+        //---------------------------------------------------------------------------------
+        //LOGIN USER
+
         [HttpPost("user/login")]
-        public string POST([FromBody] JsonElement userinput)
+        public string LoginPOST([FromBody] JsonElement userinput)
         {
             object message = new { Message = " " };
 
@@ -67,60 +74,68 @@ namespace CSharpSkillsAppAPI
             return json.ToString();
         }
 
-        //Add goal to user
-        [HttpGet("addDoelToUser/{user}/{doelID}")]
-        public void AddGoalToUser(User user, int doelID)
-        {
-            foreach (Goal goal in _db.goals)
-            {
-                if (goal.Id == doelID)
-                {
-                    user.addGoal(goal);
-                }
-            }
-        }
 
         //---------------------------------------------------------------------------------
-        //register user
+        //REGISTER USER
 
-
-        // Add user
-        [HttpGet("addUser")]
-        public JsonResult GetAddUser()
+        [HttpPost("addUser")]
+        public string AddUserPOST([FromBody] JsonElement userinput)
         {
-            try 
-            { 
-                User user = new User();
-                _db.users.Add(user);
-                _db.SaveChanges();
-                return new JsonResult(user);
+            try
+            {
+                if (userinput.GetProperty("name").ToString() != null
+                    && userinput.GetProperty("username").ToString() != null
+                    && userinput.GetProperty("email").ToString() != null
+                    && userinput.GetProperty("password").ToString() != null)
+                {
+                    User newUser = new User();
+                    newUser.Name = userinput.GetProperty("name").ToString();
+                    newUser.DateOfBirth = DateTime.Parse(userinput.GetProperty("dateOfBirth").ToString());
+                    newUser.UserName = userinput.GetProperty("username").ToString();
+                    newUser.Email = userinput.GetProperty("email").ToString();
+                    newUser.Password = userinput.GetProperty("password").ToString();
+                    newUser.Street = userinput.GetProperty("street").ToString();
+                    newUser.HouseNumber = Int32.Parse(userinput.GetProperty("houseNumber").ToString());
+                    newUser.PostalCode = userinput.GetProperty("postalCode").ToString();
+                    newUser.City = userinput.GetProperty("city").ToString();
+                    newUser.Country = userinput.GetProperty("country").ToString();
+                    newUser.IsExpert = bool.Parse(userinput.GetProperty("isExpert").ToString());
+
+                    _db.users.Add(newUser);
+                    _db.SaveChanges();
+                    return "Account registered";
+                }
+                else
+                {
+                    return "Not all fields were filled in";
+                }
             }
             catch (DbUpdateException e)
             {
-                Console.WriteLine(e);
-                return new JsonResult(e);
-                //want to return something different, don't know what
+                return e.InnerException.Message.ToString();
             }
         }
 
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+
+
+
+        [HttpPost("addUserManually/{name}/{username}/{email}/{password}/{dateofbirth}/{street}/{housenumber}/{postalcode}/{city}/{country}/{isexpert}")]
+        public bool GetAddUserWithInput(string name, string username, string email,
+            string password, DateTime dateofbirth, string street,
+            int housenumber, string postalcode, string city,
+            string country, bool isexpert)
         {
-            foreach (User user in _db.users)
+            try
             {
-                if (user.Id == id)
-                {
-                    _db.users.Remove(user);
-                }
+                _db.users.Add(new User(name, username, email, password, dateofbirth, street, housenumber, postalcode, city, country, false));
+                _db.SaveChanges();
+                return true;
             }
-            _db.SaveChanges();
+            catch (DbUpdateException e)
+            {
+                return false;
+            }
         }
-
-        //-------------------------------------------------------------------------
-
-
-
 
 
         //-------------------------------------------------------------------------
@@ -210,84 +225,21 @@ namespace CSharpSkillsAppAPI
         }
 
 
-        [HttpPost("addUser")]
-        public string AddUserPOST([FromBody] JsonElement userinput)
+        
+
+        // DELETE api/<UserController>/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
         {
-            try
+            foreach (User user in _db.users)
             {
-                if (userinput.GetProperty("name").ToString() != null
-                    && userinput.GetProperty("username").ToString() != null
-                    && userinput.GetProperty("email").ToString() != null
-                    && userinput.GetProperty("password").ToString() != null)
+                if (user.Id == id)
                 {
-                    User newUser = new User();
-                    newUser.Name = userinput.GetProperty("name").ToString();
-                    newUser.DateOfBirth = DateTime.Parse(userinput.GetProperty("dateOfBirth").ToString());
-                    newUser.UserName = userinput.GetProperty("username").ToString();
-                    newUser.Email = userinput.GetProperty("email").ToString();
-                    newUser.Password = userinput.GetProperty("password").ToString();
-                    newUser.Street = userinput.GetProperty("street").ToString();
-                    newUser.HouseNumber = Int32.Parse(userinput.GetProperty("houseNumber").ToString());
-                    newUser.PostalCode = userinput.GetProperty("postalCode").ToString();
-                    newUser.City = userinput.GetProperty("city").ToString();
-                    newUser.Country = userinput.GetProperty("country").ToString();
-                    newUser.IsExpert = bool.Parse(userinput.GetProperty("isExpert").ToString());
-
-                    _db.users.Add(newUser);
-                    _db.SaveChanges();
-                    return "Account registered";
-                }
-                else
-                {
-                    return "Not all fields were filled in";
+                    _db.users.Remove(user);
                 }
             }
-            catch (DbUpdateException e)
-            {
-                return e.InnerException.Message.ToString();  
-            }
+            _db.SaveChanges();
         }
-
-
-
-        [HttpGet("addGoalToUser/{activeUser}/{goalID}")]
-        public void AddGoalToUser(int userID, int goalID)
-        {
-            User activeUser = null;
-            Goal goalToAdd = null;
-            foreach (Goal goal in _db.goals)
-            {
-               if (goal.Id == goalID)
-                {
-                    goalToAdd = goal;
-                }
-            }
-            foreach (User user in _db.users) { 
-                if (user.Id == userID)
-                {
-                    activeUser = user;
-                }
-            }
-            if((activeUser != null) && (goalToAdd != null))
-            {
-                activeUser.addGoal(goalToAdd);
-                _db.SaveChanges();
-                Console.WriteLine(activeUser.Goals);
-            }
-        }
-        //-------------------------------------------------------------------------
-
-        //-------------------------------------------------------------------------
-        //EXAMPLES?
-        // POST api/<UserController>
-        [HttpPost]
-        public void Post([FromBody] Goal goal)
-        {
-        }
-
-        // PUT api/<UserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        { }
+        
     }
 }

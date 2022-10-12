@@ -13,15 +13,34 @@ namespace DBContextSkillsDB
     {
         public int Id { get; set; }
         public string Name { get; set; } = "Default";
-        /*Why prority?*/
-        //public int Priority { get; set; }
+        public string Category { get; set; } = "Default";
+        public string Description { get; set; } = "Default";
+        public int MaximumPoints { get; set; }
+        public int Priority { get; set; }
         public List<User> Users = new List<User>();
 
-        public Goal(string name, int priority)
+        public Goal(string name, string category, string description, int maximumpoints, int priority)
         {
             this.Name = name;
-            //this.Priority = priority;
+            this.Category = category;
+            this.Description = description;
+            this.MaximumPoints = maximumpoints;
+            this.Priority = priority;
         }
         public Goal() {}
+
+        public List<User> getUsers()
+        {
+            return this.Users;
+        }
+
+        public void adduser(User user)
+        {
+            this.Users.Add(user);
+        }
+        public void removeGoal(User user)
+        {
+            this.Users.Remove(user);
+        }
     }
 }

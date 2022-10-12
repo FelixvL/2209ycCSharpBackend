@@ -52,6 +52,7 @@ namespace DBContextSkillsDB
             this.Country = country;
             this.Email = email;
             this.Password = password;
+            this.IsExpert = isexpert;
         }
 
         public List<Goal> getDoelen()
@@ -61,7 +62,6 @@ namespace DBContextSkillsDB
 
         public void addGoal(Goal goal) {
             this.Goals.Add(goal);
-            Console.WriteLine(Goals);
         }
         public void removeGoal(Goal goal) {
             this.Goals.Remove(goal);

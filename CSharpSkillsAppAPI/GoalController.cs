@@ -32,26 +32,12 @@ namespace CSharpSkillsAppAPI
 
 
 
-        [HttpGet("addGoal/{name}/{priority}")]
-        public void AddGoal()
+        [HttpGet("addGoal/{name}/{category}/{description}/{maximumpoints}/{priority}")]
+        public void AddGoal(string name, string category, string description, int maximumpoints, int priority)
         {
-            Goal d = new Goal("testgoal", 1);
+            Goal d = new Goal(name, category, description, maximumpoints, priority);
             _db.goals.Add(d);
             _db.SaveChanges();
-        }
-
-        [HttpGet("tweede")]
-        public IEnumerable<Goal> GetTweede()
-        {
-            return _db.goals;
-        }
-        [HttpGet("derde/{input}")]
-        public IEnumerable<Goal> GetDerde(string input)
-        {
-            Goal doel= new Goal(input, 2);
-            _db.goals.Add(doel);
-            _db.SaveChanges();
-            return _db.goals;
         }
 
         // GET api/<DoelController>/5
