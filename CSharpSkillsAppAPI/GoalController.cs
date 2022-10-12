@@ -15,9 +15,20 @@ namespace CSharpSkillsAppAPI
         public GoalController(SkillDBContext db) { 
             _db = db;
         }
-        
-        
+
+
         // GET: api/<DoelController>
+        [HttpGet("allGoals")]
+        public List<Goal> GetAllGoals()
+        {
+            List<Goal> goals = new List<Goal>();
+            foreach (Goal goal in _db.goals)
+            {
+                goals.Add(goal);
+            }
+            //var json = JsonSerializer.Serialize(goals);
+            return goals;
+        }
 
 
 

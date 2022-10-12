@@ -18,6 +18,7 @@ using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.Collections;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -55,12 +56,7 @@ namespace CSharpSkillsAppAPI
                     {
                         //If username exists AND password is correct, send back json. In client store it in a localStorage
                         var userInfo = new
-                        {
-                            id = user.Id,
-                            username = user.UserName,
-                            name = user.Name,
-                            email = user.Email,
-                        };
+                        { id = user.Id };
                         var jsonInfo = JsonSerializer.Serialize(userInfo);
                         return jsonInfo.ToString();
                     }
@@ -83,7 +79,7 @@ namespace CSharpSkillsAppAPI
         //REGISTER USER
 
         [HttpPost("addUser")]
-        public bool AddUserPOST([FromBody] JsonElement userinput)
+        public string AddUserPOST([FromBody] JsonElement userinput)
         {
             try
             {
@@ -94,24 +90,32 @@ namespace CSharpSkillsAppAPI
                 {
                     User newUser = new User();
                     newUser.Name = userinput.GetProperty("name").ToString();
+                    newUser.DateOfBirth = DateTime.Parse(userinput.GetProperty("dateOfBirth").ToString());
                     newUser.UserName = userinput.GetProperty("username").ToString();
                     newUser.Email = userinput.GetProperty("email").ToString();
                     newUser.Password = userinput.GetProperty("password").ToString();
-                    newUser.IsExpert = bool.Parse(userinput.GetProperty("isexpert").ToString());
+                    newUser.Street = userinput.GetProperty("street").ToString();
+                    newUser.HouseNumber = Int32.Parse(userinput.GetProperty("houseNumber").ToString());
+                    newUser.PostalCode = userinput.GetProperty("postalCode").ToString();
+                    newUser.City = userinput.GetProperty("city").ToString();
+                    newUser.Country = userinput.GetProperty("country").ToString();
+                    newUser.IsExpert = bool.Parse(userinput.GetProperty("isExpert").ToString());
+
                     _db.users.Add(newUser);
                     _db.SaveChanges();
-                    return true;
+                    return "Account registered";
                 }
                 else
                 {
-                    return false;
+                    return "Not all fields were filled in";
                 }
             }
             catch (DbUpdateException e)
             {
-                return false;
+                return e.InnerException.Message.ToString();
             }
         }
+
 
 
 
@@ -138,13 +142,14 @@ namespace CSharpSkillsAppAPI
         //USER DETAILS
 
         // GET: api/<UserController>
-        /*[HttpPost("getUserDetails")]
-        public JsonResult GetUserDetails(int givenid)
+        [HttpPost("getUserDetails")]
+        public JsonResult GetUserDetails(JsonElement jsonElem)
         {
             try
             {
-                JsonResult test = new JsonResult(_db.users.Find(givenid));
-                return test;
+                int givenid = Int32.Parse(jsonElem.GetProperty("userId").ToString());
+                JsonResult result = new JsonResult(_db.users.Find(givenid));
+                return result;
             }
             catch (NullReferenceException e)
             {
@@ -152,29 +157,54 @@ namespace CSharpSkillsAppAPI
                 return new JsonResult(e);
                 //want to return something different, don't know what
             }
-        }*/
+        }
 
         // Change user
         [HttpPut("changeUserDetails")]
-        public JsonResult ChangeUserDetails(int givenid, String name, String username,
-            String email)
+        public JsonResult ChangeUserDetails(JsonElement jsonElem)
         {
             User user;
+
+            int givenid = Int32.Parse(jsonElem.GetProperty("id").ToString());
+            int housenumber = Int32.Parse(jsonElem.GetProperty("houseNumber").ToString());
+
             try
             {
                 user = _db.users.Find(givenid);
+                System.Diagnostics.Debug.WriteLine("USER FOUND", jsonElem.ToString());
 
-                if (user.Name != name)
+                //Add checks for sql injection
+                if (user.Name != jsonElem.GetProperty("name").ToString())
                 {
-                    user.Name = name;
+                    user.Name = jsonElem.GetProperty("name").ToString();
                 }
-                if (user.UserName != username)
+                /*if (user.UserName != username)
                 {
                     user.UserName = username;
-                }
-                if (user.Email != email)
+                }*/
+                if (user.Email != jsonElem.GetProperty("email").ToString())
                 {
-                    user.Email = email;
+                    user.Email = jsonElem.GetProperty("email").ToString();
+                }
+                if (user.Street != jsonElem.GetProperty("street").ToString())
+                {
+                    user.Street = jsonElem.GetProperty("street").ToString();
+                }
+                if (user.HouseNumber != housenumber)
+                {
+                    user.HouseNumber = Int32.Parse(jsonElem.GetProperty("houseNumber").ToString());
+                }
+                if (user.PostalCode != jsonElem.GetProperty("postalCode").ToString())
+                {
+                    user.PostalCode = jsonElem.GetProperty("postalCode").ToString();
+                }
+                if (user.City != jsonElem.GetProperty("city").ToString())
+                {
+                    user.City = jsonElem.GetProperty("city").ToString();
+                }
+                if (user.Country != jsonElem.GetProperty("country").ToString())
+                {
+                    user.Country = jsonElem.GetProperty("country").ToString();
                 }
 
                 _db.SaveChanges();
@@ -195,8 +225,7 @@ namespace CSharpSkillsAppAPI
         }
 
 
-        //-------------------------------------------------------------------------
-        //DELETE USER
+        
 
         // DELETE api/<UserController>/5
         [HttpDelete("{id}")]
@@ -211,5 +240,6 @@ namespace CSharpSkillsAppAPI
             }
             _db.SaveChanges();
         }
+        
     }
 }
