@@ -131,16 +131,13 @@ namespace CSharpSkillsAppAPI
         //USER DETAILS
 
         // GET: api/<UserController>
-        [HttpPost("getUserDetails")]
-        public JsonResult GetUserDetails(JsonElement jsonElem)
+        /*[HttpPost("getUserDetails")]
+        public JsonResult GetUserDetails(int givenid)
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("json: ", jsonElem);
-                int givenid = Int32.Parse(jsonElem.GetProperty("userId").ToString());
-                JsonResult result = new JsonResult(_db.users.Find(givenid));
-                System.Diagnostics.Debug.WriteLine("Request ID: ", givenid);
-                return result;
+                JsonResult test = new JsonResult(_db.users.Find(givenid));
+                return test;
             }
             catch (NullReferenceException e)
             {
@@ -148,7 +145,7 @@ namespace CSharpSkillsAppAPI
                 return new JsonResult(e);
                 //want to return something different, don't know what
             }
-        }
+        }*/
 
         // Change user
         [HttpPut("changeUserDetails")]
