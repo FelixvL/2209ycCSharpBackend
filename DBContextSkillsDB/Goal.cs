@@ -13,14 +13,13 @@ namespace DBContextSkillsDB
     {
         public int Id { get; set; }
         public string Name { get; set; } = "Default";
-        /*Why prority?*/
-        //public int Priority { get; set; }
+        public int Priority { get; set; }
         public List<User> Users = new List<User>();
 
         public Goal(string name, int priority)
         {
             this.Name = name;
-            //this.Priority = priority;
+            this.Priority = priority;
         }
         public Goal() {}
     }
