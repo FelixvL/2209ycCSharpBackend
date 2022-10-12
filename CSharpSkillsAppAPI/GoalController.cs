@@ -7,12 +7,12 @@ namespace CSharpSkillsAppAPI
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DoelController : ControllerBase
+    public class GoalController : ControllerBase
     {
         private SkillDBContext _db;
 
 
-        public DoelController(SkillDBContext db) { 
+        public GoalController(SkillDBContext db) { 
             _db = db;
         }
         
@@ -21,10 +21,10 @@ namespace CSharpSkillsAppAPI
 
 
 
-        [HttpGet("addGoal/{name}/{priority}")]
-        public void AddGoal()
+        [HttpGet("addGoal/{name}/{category}/{description}/{maximumpoints}/{priority}")]
+        public void AddGoal(string name, string category, string description, int maximumpoints, int priority)
         {
-            Goal d = new Goal("testgoal", "testcategory", "testdescription", 1, 2);
+            Goal d = new Goal(name, category, description, maximumpoints, priority);
             _db.goals.Add(d);
             _db.SaveChanges();
         }
