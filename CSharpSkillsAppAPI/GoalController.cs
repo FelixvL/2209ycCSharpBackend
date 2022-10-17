@@ -49,7 +49,7 @@ namespace CSharpSkillsAppAPI
         {
             var goalQuery = _db.goals.Find(givengoalid);
 
-            //Thid query always seems to return all the subgoals
+            //This query always seems to return all the subgoals
             var subgoalQuery = from GoalSubGoal in _db.Set<GoalSubGoal>()
                         join SubGoal in _db.Set<SubGoal>()
                         on GoalSubGoal.SubGoalID equals SubGoal.Id
