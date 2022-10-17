@@ -12,15 +12,15 @@ namespace DBContextSkillsDB
     public class SubGoal
     {
         public int Id { get; set; }
-        public string name { get; set; } = "Default";
-        public string description { get; set; } = "Default";
-        private Goal goal;
+        public int GoalId { get; set; }
+        public string Name { get; set; } = "Default";
+        public string Description { get; set; } = "Default";
+        public int Points { get; set; }
 
-        public SubGoal(string name, Goal goal, string description)
+        public SubGoal(string name, string description)
         {
-            this.name = name;
-            this.goal = goal;
-            this.description = description;
+            this.Name = name;
+            this.Description = description;
         }
 
         public SubGoal() { }
