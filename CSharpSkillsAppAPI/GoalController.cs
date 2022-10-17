@@ -1,6 +1,9 @@
 ﻿using DBContextSkillsDB;
 using Microsoft.AspNetCore.Mvc;
 
+using System.Text.Json;
+using System.Text.Json.Nodes;
+
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace CSharpSkillsAppAPI
@@ -26,7 +29,6 @@ namespace CSharpSkillsAppAPI
             {
                 goals.Add(goal);
             }
-            //var json = JsonSerializer.Serialize(goals);
             return goals;
         }
 
@@ -41,23 +43,30 @@ namespace CSharpSkillsAppAPI
         }
 
 
-        //returns goal
-        [HttpPost("postgoal/{givengoalid}")]
+        //returns goal (and subgoals of the goal)
+        [HttpGet("getGoal/{givengoalid}")]
         public JsonResult PostGoal(int givengoalid)
         {
-            return new JsonResult(_db.goals.Find(givengoalid)); 
-        }
+            var goalQuery = _db.goals.Find(givengoalid);
 
-        //returns all subgoals related to goal
-        [HttpPost("postsubgoals/{givengoalid}")]
-        public JsonResult PostSubGoals(int givengoalid)
-        {
-            var query = from GoalSubGoal in _db.Set<GoalSubGoal>()
+            //Thid query always seems to return all the subgoals
+            var subgoalQuery = from GoalSubGoal in _db.Set<GoalSubGoal>()
                         join SubGoal in _db.Set<SubGoal>()
                         on GoalSubGoal.SubGoalID equals SubGoal.Id
                         select new { GoalSubGoal.GoalID, GoalSubGoal.SubGoalID, SubGoal.name, SubGoal.description };
 
-            return new JsonResult(query);
+
+            string goalJson = JsonSerializer.Serialize(goalQuery);
+            string subgoalJson = JsonSerializer.Serialize(subgoalQuery);
+
+            var obj1 = JsonObject.Parse(goalJson);
+            var obj2 = JsonObject.Parse(subgoalJson);
+
+            var result = new JsonObject();
+            result.Add("goal", obj1);
+            result.Add("subgoal", obj2);
+
+            return new JsonResult(result);
         }
     }
 }
