@@ -49,12 +49,9 @@ namespace CSharpSkillsAppAPI
         {
             var goalQuery = _db.goals.Find(givengoalid);
 
-            //This query always seems to return all the subgoals
-            var subgoalQuery = from GoalSubGoal in _db.Set<GoalSubGoal>()
-                        join SubGoal in _db.Set<SubGoal>()
-                        on GoalSubGoal.SubGoalID equals SubGoal.Id
-                        select new { GoalSubGoal.GoalID, GoalSubGoal.SubGoalID, SubGoal.name, SubGoal.description };
-
+            var subgoalQuery = from SubGoal in _db.Set<SubGoal>()
+                               where SubGoal.GoalId == givengoalid
+                               select SubGoal;
 
             string goalJson = JsonSerializer.Serialize(goalQuery);
             string subgoalJson = JsonSerializer.Serialize(subgoalQuery);
