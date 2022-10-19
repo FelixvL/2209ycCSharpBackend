@@ -27,25 +27,8 @@ namespace CSharpSkillsAppAPI
         [HttpPost("AddUserGoal")]
         public void AddUserGoal([FromBody] JsonElement userinput)
         {
-            Int32.TryParse(userinput.GetProperty("goalid").ToString(), out int goalID);
-            Int32.TryParse(userinput.GetProperty("userid").ToString(), out int userID);
-            User activeUser = null;
-            Goal goalToAdd = null;
-            foreach (Goal goal in _db.goals)
-            {
-                if (goal.Id == goalID)
-                {
-                    goalToAdd = goal;
-                }
-            }
-            foreach (User user in _db.users)
-            {
-                if (user.Id == userID)
-                {
-                    activeUser = user;
-                }
-            }
-            if ((activeUser != null) && (goalToAdd != null))
+            if ((Int32.TryParse(userinput.GetProperty("goalid").ToString(), out int goalID)) && 
+                (Int32.TryParse(userinput.GetProperty("userid").ToString(), out int userID)))
             {
                 try
                 {
@@ -57,8 +40,11 @@ namespace CSharpSkillsAppAPI
                 }
                 catch (DbUpdateException e)
                 {
-                    Console.WriteLine("Cannot add duplicate User-Goal connections");
+                    Console.WriteLine("Failed to add UserGoal to database.");
                 }
+            } else
+            {
+                Console.WriteLine("goalid/userid not found or input was not a valid integer.");
             }
         }
 
@@ -77,24 +63,18 @@ namespace CSharpSkillsAppAPI
                     goalIds.Add(usergoal.GoalId);
                 }
             }
-            if (goalIds.Count != 0)
+
+            foreach (int goalid in goalIds)
             {
-                foreach (int goalid in goalIds)
+                foreach (Goal goal in _db.goals)
                 {
-                    foreach (Goal goal in _db.goals)
+                    if (goalid == goal.Id)
                     {
-                        if (goalid == goal.Id)
-                        {
-                            goals.Add(goal);
-                        }
+                        goals.Add(goal);
                     }
                 }
-                return new JsonResult(goals);
             }
-            else
-            {
-                return new JsonResult(false);
-            }
+            return new JsonResult(goals);
         }
 
         [HttpPost("GetUsersFromGoal")]
@@ -110,24 +90,18 @@ namespace CSharpSkillsAppAPI
                     userIds.Add(usergoal.UserId);
                 }
             }
-            if (userIds.Count != 0)
+
+            foreach (int userid in userIds)
             {
-                foreach (int userid in userIds)
+                foreach (User user in _db.users)
                 {
-                    foreach (User user in _db.users)
+                    if (userid == user.Id)
                     {
-                        if (userid == user.Id)
-                        {
-                            users.Add(user);
-                        }
+                        users.Add(user);
                     }
                 }
-                return new JsonResult(users);
             }
-            else
-            {
-                return new JsonResult(false);
-            }
+            return new JsonResult(users);
         }
     }
 }
