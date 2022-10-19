@@ -27,8 +27,8 @@ namespace CSharpSkillsAppAPI
         [HttpPost("AddUserGoal")]
         public void AddUserGoal([FromBody] JsonElement userinput)
         {
-            if ((Int32.TryParse(userinput.GetProperty("goalid").ToString(), out int goalID)) && 
-                (Int32.TryParse(userinput.GetProperty("userid").ToString(), out int userID)))
+            if (Int32.TryParse(userinput.GetProperty("goalid").ToString(), out int goalID) && 
+                Int32.TryParse(userinput.GetProperty("userid").ToString(), out int userID))
             {
                 try
                 {
@@ -48,18 +48,38 @@ namespace CSharpSkillsAppAPI
             }
         }
 
+        [HttpGet("AddUserGoalManually/{userID}/{goalID}")]
+        public void AddUserGoal(int userID, int goalID)
+        {
+            {
+                try
+                {
+                    UserGoal newRelation = new UserGoal();
+                    newRelation.UserId = userID;
+                    newRelation.GoalId = goalID;
+                    _db.usergoal.Add(newRelation);
+                    _db.SaveChanges();
+                }
+                catch (DbUpdateException e)
+                {
+                    Console.WriteLine("Failed to add UserGoal to database.");
+                }
+            }
+        }
+
 
 
         [HttpPost("GetGoalsFromUser")]
         public JsonResult GetGoalsFromUser([FromBody] JsonElement userinput)
         {
-            Int32.TryParse(userinput.GetProperty("userid").ToString(), out int userID);
+            Int32.TryParse(userinput.GetProperty("userId").ToString(), out int userID);
             List<int> goalIds = new List<int>();
             ArrayList goals = new ArrayList();
             foreach (UserGoal usergoal in _db.usergoal)
             {
                 if (usergoal.UserId == userID)
                 {
+                    Console.WriteLine(usergoal.GoalId);
                     goalIds.Add(usergoal.GoalId);
                 }
             }
