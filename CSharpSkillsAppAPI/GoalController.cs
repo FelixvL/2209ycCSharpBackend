@@ -32,7 +32,7 @@ namespace CSharpSkillsAppAPI
 
 
 
-        [HttpGet("addGoal/{name}/{category}/{description}/{maximumpoints}/{priority}")]
+        [HttpGet("addGoalManually/{name}/{category}/{description}/{maximumpoints}/{priority}")]
         public void AddGoal(string name, string category, string description, int maximumpoints, int priority)
         {
             Goal d = new Goal(name, category, description, maximumpoints, priority);
