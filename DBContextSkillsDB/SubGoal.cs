@@ -12,9 +12,9 @@ namespace DBContextSkillsDB
     public class SubGoal
     {
         public int Id { get; set; }
-        private string name = "Default";
+        public string name { get; set; } = "Default";
+        public string description { get; set; } = "Default";
         private Goal goal;
-        private string description;
 
         public SubGoal(string name, Goal goal, string description)
         {
@@ -24,36 +24,5 @@ namespace DBContextSkillsDB
         }
 
         public SubGoal() { }
-
-        public void setName(String name)
-        {
-            this.name = name;
-        }
-
-
-        public int getId()
-        {
-            return Id;
-        }
-
-        public void setId(int Id)
-        {
-            this.Id = Id;
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public Goal getGoal()
-        {
-            return goal;
-        }
-
-        public String getDescription()
-        {
-            return description;
-        }
     }
 }

@@ -171,7 +171,6 @@ namespace CSharpSkillsAppAPI
             try
             {
                 user = _db.users.Find(givenid);
-                System.Diagnostics.Debug.WriteLine("USER FOUND", jsonElem.ToString());
 
                 //Add checks for sql injection
                 if (user.Name != jsonElem.GetProperty("name").ToString())

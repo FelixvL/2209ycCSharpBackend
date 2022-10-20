@@ -40,29 +40,24 @@ namespace CSharpSkillsAppAPI
             _db.SaveChanges();
         }
 
-        // GET api/<DoelController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+
+        //returns goal
+        [HttpPost("postgoal/{givengoalid}")]
+        public JsonResult PostGoal(int givengoalid)
         {
-            return "value";
+            return new JsonResult(_db.goals.Find(givengoalid)); 
         }
 
-        // POST api/<DoelController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        //returns all subgoals related to goal
+        [HttpPost("postsubgoals/{givengoalid}")]
+        public JsonResult PostSubGoals(int givengoalid)
         {
-        }
+            var query = from GoalSubGoal in _db.Set<GoalSubGoal>()
+                        join SubGoal in _db.Set<SubGoal>()
+                        on GoalSubGoal.SubGoalID equals SubGoal.Id
+                        select new { GoalSubGoal.GoalID, GoalSubGoal.SubGoalID, SubGoal.name, SubGoal.description };
 
-        // PUT api/<DoelController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<DoelController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return new JsonResult(query);
         }
     }
 }
