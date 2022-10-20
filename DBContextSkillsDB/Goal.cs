@@ -15,19 +15,19 @@ namespace DBContextSkillsDB
         public string Name { get; set; } = "Default";
         public string Category { get; set; } = "Default";
         public string Description { get; set; } = "Default";
-        public int MaximumPoints { get; set; }
-        public int Priority { get; set; }
-        public string FilePath { get; set; } = "Default";
+        //public int MaximumPoints { get; set; }
+        //public int Priority { get; set; }
+        public string FileName { get; set; } = "default";
 
         public List<User> Users = new List<User>();
 
-        public Goal(string name, string category, string description, int maximumpoints, int priority)
+        public Goal(string name, string category, string description /*, int maximumpoints, int priority*/)
         {
             this.Name = name;
             this.Category = category;
             this.Description = description;
-            this.MaximumPoints = maximumpoints;
-            this.Priority = priority;
+            //this.MaximumPoints = maximumpoints;
+            //this.Priority = priority;
         }
         public Goal() {}
 

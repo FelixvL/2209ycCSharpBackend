@@ -114,6 +114,10 @@ namespace CSharpSkillsAppAPI
             {
                 return e.InnerException.Message.ToString();
             }
+            catch (NullReferenceException e)
+            {
+                return e.InnerException.Message.ToString();
+            }
         }
 
 
