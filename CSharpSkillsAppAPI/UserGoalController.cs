@@ -25,7 +25,7 @@ namespace CSharpSkillsAppAPI
         //USERGOAL ENDPOINTS
 
         [HttpPost("AddUserGoal")]
-        public void AddUserGoal([FromBody] JsonElement userinput)
+        public string AddUserGoal([FromBody] JsonElement userinput)
         {
             if (Int32.TryParse(userinput.GetProperty("goalid").ToString(), out int goalID) && 
                 Int32.TryParse(userinput.GetProperty("userid").ToString(), out int userID))
@@ -37,14 +37,41 @@ namespace CSharpSkillsAppAPI
                     newRelation.GoalId = goalID;
                     _db.usergoal.Add(newRelation);
                     _db.SaveChanges();
+                    return "saved";
                 }
                 catch (DbUpdateException e)
                 {
-                    Console.WriteLine("Failed to add UserGoal to database.");
+                    return "Failed to add UserGoal to database.";
                 }
             } else
             {
-                Console.WriteLine("goalid/userid not found or input was not a valid integer.");
+                return "goalid/userid not found or input was not a valid integer.";
+            }
+        }
+
+        [HttpPost("RemoveUserGoal")]
+        public string RemoveUserGoal([FromBody] JsonElement userinput)
+        {
+            if (Int32.TryParse(userinput.GetProperty("goalid").ToString(), out int goalID) &&
+                Int32.TryParse(userinput.GetProperty("userid").ToString(), out int userID))
+            {
+                try
+                {
+                    UserGoal newRelation = new UserGoal();
+                    newRelation.UserId = userID;
+                    newRelation.GoalId = goalID;
+                    _db.usergoal.Remove(newRelation);
+                    _db.SaveChanges();
+                    return "saved";
+                }
+                catch (DbUpdateException e)
+                {
+                    return "Failed to remove UserGoal from database.";
+                }
+            }
+            else
+            {
+                return "goalid/userid not found or input was not a valid integer.";
             }
         }
 
