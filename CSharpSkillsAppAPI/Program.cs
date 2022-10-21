@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: allowOrigins,
         builder =>
         {
-            builder.WithOrigins("http://localhost/*", "https://localhost/*").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+            builder.WithOrigins("http://localhost/*", "https://localhost/*", "https://yc2209firstruncsharpskillsappapi20221013141147.azurewebsites.net/*", "https://zealous-smoke-053ac0c03.1.azurestaticapps.net/*").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
         });
 });
 
