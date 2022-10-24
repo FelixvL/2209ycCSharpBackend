@@ -13,18 +13,14 @@ builder.Services.AddDbContext<SkillDBContext>( options => {
         options.UseSqlServer( builder.Configuration.GetConnectionString("SQL"));
 });
 
-
-var allowOrigins = "_allowOrigins";
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(name: allowOrigins,
-        builder =>
-        {
-            builder.WithOrigins("http://localhost/*", "https://localhost/*", "https://yc2209firstruncsharpskillsappapi20221013141147.azurewebsites.net/*", "https://zealous-smoke-053ac0c03.1.azurestaticapps.net/*").AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
-        });
-});
-
+builder.Services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod());
+            });
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -35,7 +31,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseCors(allowOrigins);
+app.UseCors(options => options.AllowAnyOrigin());
 
 app.UseAuthorization();
 
